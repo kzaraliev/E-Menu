@@ -331,7 +331,7 @@ export default function NewMenuItemPage() {
                     ➕ Добави вариант
                   </button>
                   <p className="mt-2 text-sm text-gray-500">
-                    Примери: "300 гр." - 8.50 лв, "500 гр." - 12.90 лв или просто "Порция" - 15.00 лв
+                    Примери: &quot;300 гр.&quot; - 8.50 лв, &quot;500 гр.&quot; - 12.90 лв или просто &quot;Порция&quot; - 15.00 лв
                   </p>
                 </div>
               </div>

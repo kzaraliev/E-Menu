@@ -3,6 +3,7 @@
 import { useAuth } from '@/lib/auth-context'
 import { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabase'
+import Link from 'next/link'
 
 export default function DashboardPage() {
   const { user } = useAuth()
@@ -172,24 +173,23 @@ export default function DashboardPage() {
               Бързи действия
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <a
+              <Link
                 href="/dashboard/restaurants"
                 className="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
               >
                 ➕ Добави ресторант
-              </a>
-              <a
+              </Link>
+              <Link
                 href="/dashboard/menu"
                 className="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
               >
                 📝 Редактирай меню
-              </a>
-              <a
-                href="#"
+              </Link>
+              <button
                 className="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
               >
                 📊 Статистики
-              </a>
+              </button>
             </div>
           </div>
         </div>
@@ -207,12 +207,12 @@ export default function DashboardPage() {
                 <div className="mt-2 text-sm text-blue-700">
                   <p>
                     Изглежда, че нямате създадени ресторанти. Започнете с 
-                    <a 
+                    <Link 
                       href="/dashboard/restaurants" 
                       className="font-medium underline hover:text-blue-600"
                     >
                       {' '}създаване на вашия първи ресторант
-                    </a>.
+                    </Link>.
                   </p>
                 </div>
               </div>

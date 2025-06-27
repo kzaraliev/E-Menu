@@ -3,6 +3,7 @@
 import { useAuth } from '@/lib/auth-context'
 import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
+import Link from 'next/link'
 
 export default function DashboardLayout({ children }) {
   const { user, loading, signOut } = useAuth()
@@ -41,24 +42,24 @@ export default function DashboardLayout({ children }) {
               <h1 className="text-xl font-bold text-gray-900">e-menu.bg</h1>
               <div className="hidden md:block ml-10">
                 <div className="flex items-baseline space-x-4">
-                  <a
+                  <Link
                     href="/dashboard"
                     className="text-gray-900 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium"
                   >
                     Dashboard
-                  </a>
-                  <a
+                  </Link>
+                  <Link
                     href="/dashboard/restaurants"
                     className="text-gray-500 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium"
                   >
                     Ресторанти
-                  </a>
-                                      <a
-                      href="/dashboard/restaurants"
-                      className="text-gray-500 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium"
-                    >
-                      Менюта
-                    </a>
+                  </Link>
+                  <Link
+                    href="/dashboard/restaurants"
+                    className="text-gray-500 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium"
+                  >
+                    Менюта
+                  </Link>
                 </div>
               </div>
             </div>
