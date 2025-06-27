@@ -53,12 +53,12 @@ export default function DashboardLayout({ children }) {
                   >
                     Ресторанти
                   </a>
-                  <a
-                    href="/dashboard/menu"
-                    className="text-gray-500 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium"
-                  >
-                    Меню
-                  </a>
+                                      <a
+                      href="/dashboard/restaurants"
+                      className="text-gray-500 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium"
+                    >
+                      Менюта
+                    </a>
                 </div>
               </div>
             </div>
