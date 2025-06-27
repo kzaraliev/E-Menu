@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabase'
 import { useParams } from 'next/navigation'
 import Link from 'next/link'
+import { AVAILABLE_LANGUAGES, getTranslation } from '@/lib/languages'
 
 export default function MenuManagementPage() {
   const { user } = useAuth()
@@ -15,12 +16,135 @@ export default function MenuManagementPage() {
   const [error, setError] = useState('')
   const [showAddCategory, setShowAddCategory] = useState(false)
   const [newCategoryName, setNewCategoryName] = useState('')
+  const [selectedLanguage, setSelectedLanguage] = useState('bg')
+  const [translationModal, setTranslationModal] = useState({
+    isOpen: false,
+    type: null, // 'category' or 'item'
+    item: null,
+    translationName: '',
+    translationDescription: ''
+  })
 
   useEffect(() => {
     if (user && params.id) {
       fetchData()
     }
   }, [user, params.id])
+
+  // Helper functions for translations
+  const getCategoryName = (category) => {
+    return getTranslation(category, category.category_translations, 'name', selectedLanguage)
+  }
+
+  const getItemName = (item) => {
+    return getTranslation(item, item.menu_item_translations, 'name', selectedLanguage)
+  }
+
+  const getItemDescription = (item) => {
+    return getTranslation(item, item.menu_item_translations, 'description', selectedLanguage)
+  }
+
+  // Translation modal functions
+  const openTranslationModal = (type, item) => {
+    const currentLang = selectedLanguage
+    let name = ''
+    let description = ''
+
+    if (type === 'category') {
+      const translation = item.category_translations?.find(t => t.language_code === currentLang)
+      name = translation?.name || ''
+    } else if (type === 'item') {
+      const translation = item.menu_item_translations?.find(t => t.language_code === currentLang)
+      name = translation?.name || ''
+      description = translation?.description || ''
+    }
+
+    setTranslationModal({
+      isOpen: true,
+      type,
+      item,
+      translationName: name,
+      translationDescription: description
+    })
+  }
+
+  const closeTranslationModal = () => {
+    setTranslationModal({
+      isOpen: false,
+      type: null,
+      item: null,
+      translationName: '',
+      translationDescription: ''
+    })
+  }
+
+  const saveTranslation = async () => {
+    const { type, item, translationName, translationDescription } = translationModal
+    
+    try {
+      if (type === 'category') {
+        // Check if translation exists
+        const existingTranslation = item.category_translations?.find(t => t.language_code === selectedLanguage)
+        
+        if (existingTranslation) {
+          // Update existing translation
+          const { error } = await supabase
+            .from('category_translations')
+            .update({ name: translationName })
+            .eq('category_id', item.id)
+            .eq('language_code', selectedLanguage)
+          
+          if (error) throw error
+        } else {
+          // Create new translation
+          const { error } = await supabase
+            .from('category_translations')
+            .insert([{
+              category_id: item.id,
+              language_code: selectedLanguage,
+              name: translationName
+            }])
+          
+          if (error) throw error
+        }
+      } else if (type === 'item') {
+        // Check if translation exists
+        const existingTranslation = item.menu_item_translations?.find(t => t.language_code === selectedLanguage)
+        
+        if (existingTranslation) {
+          // Update existing translation
+          const { error } = await supabase
+            .from('menu_item_translations')
+            .update({ 
+              name: translationName,
+              description: translationDescription 
+            })
+            .eq('menu_item_id', item.id)
+            .eq('language_code', selectedLanguage)
+          
+          if (error) throw error
+        } else {
+          // Create new translation
+          const { error } = await supabase
+            .from('menu_item_translations')
+            .insert([{
+              menu_item_id: item.id,
+              language_code: selectedLanguage,
+              name: translationName,
+              description: translationDescription
+            }])
+          
+          if (error) throw error
+        }
+      }
+
+      // Refresh data to show new translations
+      await fetchData()
+      closeTranslationModal()
+    } catch (err) {
+      setError('Грешка при запазването на превода: ' + err.message)
+    }
+  }
 
   const fetchData = async () => {
     try {
@@ -35,14 +159,20 @@ export default function MenuManagementPage() {
       if (restaurantError) throw restaurantError
       setRestaurant(restaurantData)
 
-      // Fetch categories with menu items
+      // Fetch categories with menu items and translations
       const { data: categoriesData, error: categoriesError } = await supabase
         .from('categories')
         .select(`
           *,
+          category_translations (
+            language_code, name
+          ),
           menu_items (
             *,
-            menu_item_variants (*)
+            menu_item_variants (*),
+            menu_item_translations (
+              language_code, name, description
+            )
           )
         `)
         .eq('restaurant_id', params.id)
@@ -134,7 +264,23 @@ export default function MenuManagementPage() {
               Управлявайте категориите и артикулите в менюто
             </p>
           </div>
-          <div className="flex space-x-3">
+          <div className="flex items-center space-x-3">
+            {/* Language Switcher */}
+            <div className="flex items-center space-x-2">
+              <span className="text-sm text-gray-500">Език:</span>
+              <select
+                value={selectedLanguage}
+                onChange={(e) => setSelectedLanguage(e.target.value)}
+                className="text-sm border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+              >
+                {AVAILABLE_LANGUAGES.map((lang) => (
+                  <option key={lang.code} value={lang.code}>
+                    {lang.flag} - {lang.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+            
             <Link
               href={`/${restaurant.slug}`}
               target="_blank"
@@ -214,10 +360,25 @@ export default function MenuManagementPage() {
               {/* Category Header */}
               <div className="bg-gray-50 px-6 py-4 border-b border-gray-200">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-lg font-medium text-gray-900">
-                    {category.name}
-                  </h3>
+                  <div>
+                    <h3 className="text-lg font-medium text-gray-900">
+                      {getCategoryName(category)}
+                    </h3>
+                    {selectedLanguage !== 'bg' && (
+                      <p className="text-sm text-gray-500">
+                        Оригинал: {category.name}
+                      </p>
+                    )}
+                  </div>
                   <div className="flex items-center space-x-3">
+                    {selectedLanguage !== 'bg' && (
+                      <button
+                        onClick={() => openTranslationModal('category', category)}
+                        className="text-blue-600 hover:text-blue-800 text-sm"
+                      >
+                        🌐 {getCategoryName(category) === category.name ? 'Добави превод' : 'Редактирай превод'}
+                      </button>
+                    )}
                     <span className="text-sm text-gray-500">
                       {category.menu_items?.length || 0} артикула
                     </span>
@@ -249,9 +410,15 @@ export default function MenuManagementPage() {
                     {category.menu_items.map((item) => (
                       <div key={item.id} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
                         <div className="flex-1">
-                          <h4 className="font-medium text-gray-900">{item.name}</h4>
-                          {item.description && (
-                            <p className="text-sm text-gray-600 mt-1">{item.description}</p>
+                          <h4 className="font-medium text-gray-900">{getItemName(item)}</h4>
+                          {selectedLanguage !== 'bg' && getItemName(item) !== item.name && (
+                            <p className="text-xs text-gray-500">Оригинал: {item.name}</p>
+                          )}
+                          {getItemDescription(item) && (
+                            <p className="text-sm text-gray-600 mt-1">{getItemDescription(item)}</p>
+                          )}
+                          {selectedLanguage !== 'bg' && getItemDescription(item) !== item.description && item.description && (
+                            <p className="text-xs text-gray-500">Оригинал описание: {item.description}</p>
                           )}
                           <div className="mt-2 flex items-center space-x-4">
                             {item.menu_item_variants?.map((variant) => (
@@ -262,6 +429,14 @@ export default function MenuManagementPage() {
                           </div>
                         </div>
                         <div className="flex items-center space-x-2">
+                          {selectedLanguage !== 'bg' && (
+                            <button
+                              onClick={() => openTranslationModal('item', item)}
+                              className="text-blue-600 hover:text-blue-800 text-sm"
+                            >
+                              🌐 {getItemName(item) === item.name ? 'Добави превод' : 'Редактирай превод'}
+                            </button>
+                          )}
                           <Link
                             href={`/dashboard/restaurants/${params.id}/menu/items/${item.id}/edit`}
                             className="text-blue-600 hover:text-blue-800 text-sm"
@@ -328,6 +503,85 @@ export default function MenuManagementPage() {
           </div>
         )}
       </div>
+
+      {/* Translation Modal */}
+      {translationModal.isOpen && (
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+          <div className="relative top-20 mx-auto p-5 border w-11/12 md:w-1/2 shadow-lg rounded-md bg-white">
+            <div className="mt-3">
+              <h3 className="text-lg font-medium text-gray-900 mb-4">
+                Превод на {AVAILABLE_LANGUAGES.find(l => l.code === selectedLanguage)?.name}
+              </h3>
+              
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    {translationModal.type === 'category' ? 'Име на категорията' : 'Име на артикула'}
+                  </label>
+                  <input
+                    type="text"
+                    value={translationModal.translationName}
+                    onChange={(e) => setTranslationModal(prev => ({
+                      ...prev,
+                      translationName: e.target.value
+                    }))}
+                    className="w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                    placeholder={`Въведете ${translationModal.type === 'category' ? 'име на категорията' : 'име на артикула'} на ${AVAILABLE_LANGUAGES.find(l => l.code === selectedLanguage)?.name}`}
+                  />
+                </div>
+
+                {translationModal.type === 'item' && (
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Описание (незадължително)
+                    </label>
+                    <textarea
+                      value={translationModal.translationDescription}
+                      onChange={(e) => setTranslationModal(prev => ({
+                        ...prev,
+                        translationDescription: e.target.value
+                      }))}
+                      rows={3}
+                      className="w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                      placeholder={`Въведете описание на ${AVAILABLE_LANGUAGES.find(l => l.code === selectedLanguage)?.name}`}
+                    />
+                  </div>
+                )}
+
+                <div className="bg-gray-50 p-3 rounded-md">
+                  <p className="text-sm text-gray-600">
+                    <strong>Оригинал:</strong>
+                  </p>
+                  <p className="text-sm font-medium">
+                    {translationModal.type === 'category' ? translationModal.item?.name : translationModal.item?.name}
+                  </p>
+                  {translationModal.type === 'item' && translationModal.item?.description && (
+                    <p className="text-sm text-gray-600 mt-1">
+                      {translationModal.item.description}
+                    </p>
+                  )}
+                </div>
+              </div>
+
+              <div className="flex justify-end space-x-3 mt-6">
+                <button
+                  onClick={closeTranslationModal}
+                  className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md"
+                >
+                  Отказ
+                </button>
+                <button
+                  onClick={saveTranslation}
+                  disabled={!translationModal.translationName.trim()}
+                  className="px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 disabled:opacity-50 rounded-md"
+                >
+                  Запази превод
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 } 
