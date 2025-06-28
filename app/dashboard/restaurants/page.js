@@ -13,12 +13,6 @@ export default function RestaurantsPage() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
 
-  useEffect(() => {
-    if (user) {
-      fetchRestaurants()
-    }
-  }, [user])
-
   const fetchRestaurants = async () => {
     try {
       const { data, error } = await supabase
@@ -35,6 +29,13 @@ export default function RestaurantsPage() {
       setLoading(false)
     }
   }
+
+  useEffect(() => {
+    if (user) {
+      fetchRestaurants()
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user])
 
   const handleDelete = async (restaurantId, restaurantName) => {
     if (!confirm(`Сигурни ли сте, че искате да изтриете "${restaurantName}"? Това действие е необратимо.`)) {

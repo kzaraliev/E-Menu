@@ -18,12 +18,6 @@ export default function DashboardPage() {
   })
   const [loading, setLoading] = useState(true)
 
-  useEffect(() => {
-    if (user) {
-      fetchStats()
-    }
-  }, [user])
-
   const fetchStats = async () => {
     try {
       // Fetch restaurants count
@@ -62,6 +56,13 @@ export default function DashboardPage() {
       setLoading(false)
     }
   }
+
+  useEffect(() => {
+    if (user) {
+      fetchStats()
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user])
 
   if (loading || subscriptionLoading) {
     return (

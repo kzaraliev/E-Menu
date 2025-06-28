@@ -27,6 +27,7 @@ export default function EditMenuItemPage() {
     if (user && params.id && params.itemId) {
       fetchData()
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, params.id, params.itemId])
 
   const fetchData = async () => {

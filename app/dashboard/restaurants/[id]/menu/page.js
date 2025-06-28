@@ -72,6 +72,7 @@ export default function MenuManagementPage() {
     if (user && params.id) {
       fetchData()
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, params.id])
 
   // Show payment required message if needed
@@ -118,7 +119,7 @@ export default function MenuManagementPage() {
           {restaurant && (
             <div className="mt-8 bg-white rounded-lg shadow-sm p-6">
               <h3 className="text-lg font-medium text-gray-900 mb-4">
-                Преглед на меню за "{restaurant.name}" (само за четене)
+                Преглед на меню за &quot;{restaurant.name}&quot; (само за четене)
               </h3>
               {categories.length === 0 ? (
                 <p className="text-gray-500">Няма добавени категории</p>

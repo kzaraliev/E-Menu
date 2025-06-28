@@ -139,7 +139,7 @@ export default function Hero() {
                       {/* Menu Content */}
                       <div className="p-4 space-y-4">
                         <div className="text-center">
-                          <h3 className="text-lg font-bold text-gray-900">Ресторант "Орхидея"</h3>
+                          <h3 className="text-lg font-bold text-gray-900">Ресторант &quot;Орхидея&quot;</h3>
                           <p className="text-sm text-gray-600">Вкусни традиционни ястия</p>
                         </div>
                         

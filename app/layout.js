@@ -3,6 +3,7 @@ import "./globals.css";
 import { AuthProvider } from "@/lib/auth-context";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
+import NextTopLoader from 'nextjs-toploader';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -27,6 +28,10 @@ export default function RootLayout({ children }) {
       >
         <AuthProvider>
           <div className="flex flex-col min-h-screen">
+            <NextTopLoader 
+            color="#2299DD"
+            showSpinner={false}
+          />
             <Navigation />
             <main className="flex-grow">
               {children}

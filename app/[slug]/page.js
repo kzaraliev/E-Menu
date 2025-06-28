@@ -20,6 +20,7 @@ export default function PublicMenuPage() {
     if (params.slug) {
       fetchMenuData()
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params.slug])
 
   // Helper functions for translations

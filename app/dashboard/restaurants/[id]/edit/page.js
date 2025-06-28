@@ -25,12 +25,6 @@ export default function EditRestaurantPage() {
   const [error, setError] = useState('')
   const [slugError, setSlugError] = useState('')
 
-  useEffect(() => {
-    if (user && params.id) {
-      fetchRestaurant()
-    }
-  }, [user, params.id])
-
   const fetchRestaurant = async () => {
     try {
       const { data, error } = await supabase
@@ -56,6 +50,13 @@ export default function EditRestaurantPage() {
       setLoading(false)
     }
   }
+
+  useEffect(() => {
+    if (user && params.id) {
+      fetchRestaurant()
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user, params.id])
 
   // Generate slug from restaurant name (same as in new page)
   const generateSlug = (name) => {
