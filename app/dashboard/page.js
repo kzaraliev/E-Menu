@@ -5,7 +5,7 @@ import { useSubscription, getPaymentRequiredMessage } from '@/lib/payment-protec
 import { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabase'
 import Link from 'next/link'
-import DashboardPricing from '@/components/DashboardPricing'
+import Pricing from '@/components/Pricing'
 
 export default function DashboardPage() {
   const { user } = useAuth()
@@ -74,7 +74,7 @@ export default function DashboardPage() {
 
   // Show pricing if user doesn't have active subscription
   if (!hasActiveSubscription) {
-    return <DashboardPricing />
+    return <Pricing />
   }
 
   return (
