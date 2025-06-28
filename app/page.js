@@ -1,4 +1,6 @@
 import Link from 'next/link'
+import Pricing from '@/components/Pricing'
+import ButtonCustomerPortal from '@/components/ButtonCustomerPortal'
 
 export default function Home() {
   return (
@@ -33,6 +35,7 @@ export default function Home() {
                     >
                       Научете повече
                     </a>
+                    <ButtonCustomerPortal />
                   </div>
                 </div>
               </div>
@@ -101,6 +104,8 @@ export default function Home() {
           </div>
         </div>
       </div>
+
+      <Pricing />
 
       {/* CTA Section */}
       <div className="bg-blue-50">
