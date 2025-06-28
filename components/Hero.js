@@ -49,16 +49,10 @@ export default function Hero() {
           <div className="mx-auto max-w-2xl lg:mx-0 lg:flex-auto">
             {/* Status Badge */}
             <div className="flex">
-              <div className="relative flex items-center gap-x-4 rounded-full bg-gradient-to-r from-green-50 to-emerald-50 px-4 py-1 text-sm/6 text-gray-600 ring-1 ring-green-500/20 hover:ring-green-500/30 transition-all duration-200">
-                <span className="font-semibold text-green-600">✨ Нов продукт</span>
+              <div className="relative flex items-center gap-x-4 rounded-full bg-gradient-to-r from-green-50 to-emerald-50 px-4 py-1 text-sm/6 text-gray-600 ring-1 ring-green-500/20 transition-all duration-200">
+                <span className="font-semibold text-green-600">✨ Безплатна регистрация</span>
                 <span aria-hidden="true" className="h-4 w-px bg-gray-900/10" />
-                <Link href="/#pricing" className="flex items-center gap-x-1 hover:text-green-600 transition-colors">
-                  <span aria-hidden="true" className="absolute inset-0" />
-                  Вижте цените
-                  <svg className="-mr-2 size-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                  </svg>
-                </Link>
+                <span className="text-green-600">Изберете план след влизане</span>
               </div>
             </div>
 
@@ -98,7 +92,7 @@ export default function Hero() {
               >
                 {user ? 'Към таблото' : 'Започнете сега'}
               </button>
-              <Link href="/#pricing" className="text-sm/6 font-semibold text-gray-900 hover:text-indigo-600 transition-colors">
+              <Link href="/#features" className="text-sm/6 font-semibold text-gray-900 hover:text-indigo-600 transition-colors">
                 Научете повече <span aria-hidden="true">→</span>
               </Link>
             </div>

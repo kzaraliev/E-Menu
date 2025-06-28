@@ -1,6 +1,7 @@
 'use client'
 
 import { useAuth } from '@/lib/auth-context'
+import { useSubscription, getPaymentRequiredMessage } from '@/lib/payment-protection'
 import { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabase'
 import { useParams } from 'next/navigation'
@@ -10,6 +11,7 @@ import { AVAILABLE_LANGUAGES, getTranslation } from '@/lib/languages'
 export default function MenuManagementPage() {
   const { user } = useAuth()
   const params = useParams()
+  const { hasActiveSubscription, restaurantCount, loading: subscriptionLoading } = useSubscription(user)
   const [restaurant, setRestaurant] = useState(null)
   const [categories, setCategories] = useState([])
   const [loading, setLoading] = useState(true)
@@ -25,11 +27,132 @@ export default function MenuManagementPage() {
     translationDescription: ''
   })
 
+  const fetchData = async () => {
+    try {
+      // Fetch restaurant info
+      const { data: restaurantData, error: restaurantError } = await supabase
+        .from('restaurants')
+        .select('*')
+        .eq('id', params.id)
+        .eq('owner_id', user.id)
+        .single()
+
+      if (restaurantError) throw restaurantError
+      setRestaurant(restaurantData)
+
+      // Fetch categories with menu items and translations
+      const { data: categoriesData, error: categoriesError } = await supabase
+        .from('categories')
+        .select(`
+          *,
+          category_translations (
+            language_code, name
+          ),
+          menu_items (
+            *,
+            menu_item_variants (*),
+            menu_item_translations (
+              language_code, name, description
+            )
+          )
+        `)
+        .eq('restaurant_id', params.id)
+        .order('sort_order', { ascending: true })
+
+      if (categoriesError) throw categoriesError
+      setCategories(categoriesData || [])
+    } catch (err) {
+      setError('Грешка при зареждането: ' + err.message)
+    } finally {
+      setLoading(false)
+    }
+  }
+
   useEffect(() => {
     if (user && params.id) {
       fetchData()
     }
   }, [user, params.id])
+
+  // Show payment required message if needed
+  const canEdit = hasActiveSubscription && restaurant && subscriptionLoading === false
+
+  if (subscriptionLoading || loading) {
+    return (
+      <div className="flex justify-center items-center h-64">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+      </div>
+    )
+  }
+
+  // Show warning if user cannot edit (no subscription)
+  if (!canEdit && restaurant) {
+    return (
+      <div className="px-4 py-6 sm:px-0">
+        <div className="max-w-2xl mx-auto">
+          <div className="bg-gradient-to-r from-orange-50 to-red-50 border border-orange-200 rounded-lg p-8 text-center">
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">
+              Управлението на менюто е ограничено
+            </h2>
+            <p className="text-gray-700 mb-6 text-lg">
+              За да управлявате менюто, ви е необходим активен план.
+            </p>
+            <div className="space-y-4">
+              <Link
+                href="/pricing"
+                className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-orange-600 hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 transition-colors duration-200"
+              >
+                Изберете план
+              </Link>
+              <br/>
+              <Link
+                href="/dashboard/restaurants"
+                className="text-gray-600 hover:text-gray-800 underline"
+              >
+                Назад към ресторанти
+              </Link>
+            </div>
+          </div>
+
+          {/* Show read-only view of the menu */}
+          {restaurant && (
+            <div className="mt-8 bg-white rounded-lg shadow-sm p-6">
+              <h3 className="text-lg font-medium text-gray-900 mb-4">
+                Преглед на меню за "{restaurant.name}" (само за четене)
+              </h3>
+              {categories.length === 0 ? (
+                <p className="text-gray-500">Няма добавени категории</p>
+              ) : (
+                <div className="space-y-4">
+                  {categories.map((category) => (
+                    <div key={category.id} className="border border-gray-200 rounded-lg p-4">
+                      <h4 className="font-medium text-gray-900">{getCategoryName(category)}</h4>
+                      {category.menu_items?.length > 0 ? (
+                        <div className="mt-2 space-y-2">
+                          {category.menu_items.map((item) => (
+                            <div key={item.id} className="text-sm text-gray-600 pl-4">
+                              • {getItemName(item)}
+                              {item.menu_item_variants?.map((variant) => (
+                                <span key={variant.id} className="ml-2 text-green-600">
+                                  ({variant.name}: {variant.price} лв.)
+                                </span>
+                              ))}
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <p className="text-sm text-gray-500 mt-2">Няма добавени продукти</p>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      </div>
+    )
+  }
 
   // Helper functions for translations
   const getCategoryName = (category) => {
@@ -143,47 +266,6 @@ export default function MenuManagementPage() {
       closeTranslationModal()
     } catch (err) {
       setError('Грешка при запазването на превода: ' + err.message)
-    }
-  }
-
-  const fetchData = async () => {
-    try {
-      // Fetch restaurant info
-      const { data: restaurantData, error: restaurantError } = await supabase
-        .from('restaurants')
-        .select('*')
-        .eq('id', params.id)
-        .eq('owner_id', user.id)
-        .single()
-
-      if (restaurantError) throw restaurantError
-      setRestaurant(restaurantData)
-
-      // Fetch categories with menu items and translations
-      const { data: categoriesData, error: categoriesError } = await supabase
-        .from('categories')
-        .select(`
-          *,
-          category_translations (
-            language_code, name
-          ),
-          menu_items (
-            *,
-            menu_item_variants (*),
-            menu_item_translations (
-              language_code, name, description
-            )
-          )
-        `)
-        .eq('restaurant_id', params.id)
-        .order('sort_order', { ascending: true })
-
-      if (categoriesError) throw categoriesError
-      setCategories(categoriesData || [])
-    } catch (err) {
-      setError('Грешка при зареждането: ' + err.message)
-    } finally {
-      setLoading(false)
     }
   }
 

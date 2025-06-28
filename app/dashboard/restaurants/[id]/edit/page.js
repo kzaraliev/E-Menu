@@ -1,6 +1,7 @@
 'use client'
 
 import { useAuth } from '@/lib/auth-context'
+import { useSubscription, getPaymentRequiredMessage } from '@/lib/payment-protection'
 import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabase'
 import { useRouter, useParams } from 'next/navigation'
@@ -10,6 +11,7 @@ export default function EditRestaurantPage() {
   const { user } = useAuth()
   const router = useRouter()
   const params = useParams()
+  const { hasActiveSubscription, restaurantCount, loading: subscriptionLoading } = useSubscription(user)
   const [formData, setFormData] = useState({
     name: '',
     slug: '',
@@ -167,10 +169,47 @@ export default function EditRestaurantPage() {
     }
   }
 
-  if (loading) {
+  // Check if user can edit this restaurant
+  const canEdit = hasActiveSubscription && formData.name && subscriptionLoading === false
+
+  // Show loading while fetching subscription info or restaurant data
+  if (loading || subscriptionLoading) {
     return (
       <div className="flex justify-center items-center h-64">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+      </div>
+    )
+  }
+
+  // Show warning if user cannot edit (no subscription or inactive restaurant)
+  if (!canEdit && formData.name) {
+    return (
+      <div className="px-4 py-6 sm:px-0">
+        <div className="max-w-2xl mx-auto">
+          <div className="bg-gradient-to-r from-orange-50 to-red-50 border border-orange-200 rounded-lg p-8 text-center">
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">
+              Редактирането е ограничено
+            </h2>
+            <p className="text-gray-700 mb-6 text-lg">
+              За да редактирате ресторанта, ви е необходим активен план.
+            </p>
+            <div className="space-y-4">
+              <Link
+                href="/pricing"
+                className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-orange-600 hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 transition-colors duration-200"
+              >
+                Изберете план
+              </Link>
+              <br/>
+              <Link
+                href="/dashboard/restaurants"
+                className="text-gray-600 hover:text-gray-800 underline"
+              >
+                Назад към ресторанти
+              </Link>
+            </div>
+          </div>
+        </div>
       </div>
     )
   }

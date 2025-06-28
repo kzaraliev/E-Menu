@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabase'
 import { useParams } from 'next/navigation'
 import { AVAILABLE_LANGUAGES, getTranslation } from '@/lib/languages'
+import Link from 'next/link'
 
 export default function PublicMenuPage() {
   const params = useParams()
@@ -47,6 +48,12 @@ export default function PublicMenuPage() {
 
       if (restaurantError || !restaurantData) {
         setError('Ресторантът не е намерен')
+        return
+      }
+
+      // Check if restaurant is active - block access to inactive restaurants
+      if (!restaurantData.is_active) {
+        setError('Ресторантът временно не е наличен')
         return
       }
 
@@ -134,12 +141,12 @@ export default function PublicMenuPage() {
           <div className="text-6xl mb-4">🍽️</div>
           <h1 className="text-2xl font-bold text-gray-900 mb-2">Ресторантът не е намерен</h1>
           <p className="text-gray-600 mb-6">{error || 'Моля, проверете адреса и опитайте отново.'}</p>
-          <a 
-            href="https://e-menu.bg" 
+          <Link 
+            href="/" 
             className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
           >
             Към e-menu.bg
-          </a>
+          </Link>
         </div>
       </div>
     )
@@ -284,14 +291,12 @@ export default function PublicMenuPage() {
         <div className="max-w-4xl mx-auto px-4 py-6 text-center">
           <p className="text-sm text-gray-500">
             Powered by{' '}
-            <a 
-              href="https://e-menu.bg" 
+            <Link 
+              href="/" 
               className="text-blue-600 hover:text-blue-800 font-medium"
-              target="_blank"
-              rel="noopener noreferrer"
             >
               e-menu.bg
-            </a>
+            </Link>
           </p>
         </div>
       </div>

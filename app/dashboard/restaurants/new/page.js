@@ -1,6 +1,7 @@
 'use client'
 
 import { useAuth } from '@/lib/auth-context'
+import { useSubscription, getPaymentRequiredMessage } from '@/lib/payment-protection'
 import { useState } from 'react'
 import { supabase } from '@/lib/supabase'
 import { useRouter } from 'next/navigation'
@@ -9,6 +10,7 @@ import Link from 'next/link'
 export default function NewRestaurantPage() {
   const { user } = useAuth()
   const router = useRouter()
+  const { hasActiveSubscription, restaurantCount, loading: subscriptionLoading, canCreateRestaurant } = useSubscription(user)
   const [formData, setFormData] = useState({
     name: '',
     slug: '',
@@ -20,6 +22,63 @@ export default function NewRestaurantPage() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [slugError, setSlugError] = useState('')
+
+  // Show payment required message if needed
+  const paymentMessage = getPaymentRequiredMessage(hasActiveSubscription, restaurantCount)
+  if (paymentMessage || subscriptionLoading) {
+    if (subscriptionLoading) {
+      return (
+        <div className="flex justify-center items-center h-64">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+        </div>
+      )
+    }
+
+    return (
+      <div className="px-4 py-6 sm:px-0">
+        <div className="max-w-2xl mx-auto">
+          <div className="bg-gradient-to-r from-orange-50 to-red-50 border border-orange-200 rounded-lg p-8 text-center">
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">
+              {paymentMessage.title}
+            </h2>
+            <p className="text-gray-700 mb-6 text-lg">
+              {paymentMessage.message}
+            </p>
+            <Link
+              href={paymentMessage.actionLink}
+              className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-orange-600 hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 transition-colors duration-200"
+            >
+              {paymentMessage.action}
+            </Link>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  // Block creation if user can't create restaurant (even with subscription)
+  if (!canCreateRestaurant) {
+    return (
+      <div className="px-4 py-6 sm:px-0">
+        <div className="max-w-2xl mx-auto">
+          <div className="bg-gradient-to-r from-yellow-50 to-orange-50 border border-yellow-200 rounded-lg p-8 text-center">
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">
+              Лимит достигнат
+            </h2>
+            <p className="text-gray-700 mb-6 text-lg">
+              Вече имате максималния брой ресторанти за вашия план.
+            </p>
+            <Link
+              href="/dashboard/restaurants"
+              className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-yellow-600 hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500 transition-colors duration-200"
+            >
+              Назад към ресторанти
+            </Link>
+          </div>
+        </div>
+      </div>
+    )
+  }
 
   // Generate slug from restaurant name
   const generateSlug = (name) => {

@@ -1,12 +1,15 @@
 'use client'
 
 import { useAuth } from '@/lib/auth-context'
+import { useSubscription, getPaymentRequiredMessage } from '@/lib/payment-protection'
 import { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabase'
 import Link from 'next/link'
+import DashboardPricing from '@/components/DashboardPricing'
 
 export default function DashboardPage() {
   const { user } = useAuth()
+  const { hasActiveSubscription, restaurantCount, loading: subscriptionLoading, canCreateRestaurant, hasReachedLimit } = useSubscription(user)
   const [stats, setStats] = useState({
     restaurants: 0,
     categories: 0,
@@ -60,7 +63,7 @@ export default function DashboardPage() {
     }
   }
 
-  if (loading) {
+  if (loading || subscriptionLoading) {
     return (
       <div className="flex justify-center items-center h-64">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
@@ -68,12 +71,23 @@ export default function DashboardPage() {
     )
   }
 
+  // Show pricing if user doesn't have active subscription
+  if (!hasActiveSubscription) {
+    return <DashboardPricing />
+  }
+
   return (
     <div className="px-4 py-6 sm:px-0">
       <div className="border-4 border-dashed border-gray-200 rounded-lg p-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-8">
-          Добре дошли в e-menu.bg Dashboard
-        </h1>
+        <div className="flex items-center justify-between mb-8">
+          <h1 className="text-3xl font-bold text-gray-900">
+            Добре дошли в e-menu.bg Dashboard
+          </h1>
+          <div className="flex items-center space-x-2 bg-green-50 border-green-200 border rounded-lg px-3 py-1">
+            <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+            <span className="text-sm font-medium text-green-700">Активен план</span>
+          </div>
+        </div>
 
         {/* Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
@@ -173,20 +187,26 @@ export default function DashboardPage() {
               Бързи действия
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {canCreateRestaurant ? (
+                <Link
+                  href="/dashboard/restaurants/new"
+                  className="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200"
+                >
+                  ➕ Добави ресторант
+                </Link>
+              ) : (
+                <div className="inline-flex items-center px-4 py-2 border border-gray-200 shadow-sm text-sm font-medium rounded-md text-gray-400 bg-gray-50 cursor-not-allowed">
+                  ➕ Ресторант създаден
+                </div>
+              )}
               <Link
                 href="/dashboard/restaurants"
-                className="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-              >
-                ➕ Добави ресторант
-              </Link>
-              <Link
-                href="/dashboard/menu"
-                className="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                className="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200"
               >
                 📝 Редактирай меню
               </Link>
               <button
-                className="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                className="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200"
               >
                 📊 Статистики
               </button>
@@ -194,26 +214,33 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {stats.restaurants === 0 && (
+        {stats.restaurants === 0 && canCreateRestaurant && (
           <div className="bg-blue-50 border border-blue-200 rounded-md p-4 mt-6">
             <div className="flex">
               <div className="flex-shrink-0">
-                <span className="text-blue-400">ℹ️</span>
+                <svg className="h-5 w-5 text-blue-400" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                </svg>
               </div>
               <div className="ml-3">
                 <h3 className="text-sm font-medium text-blue-800">
-                  Започнете тук!
+                  Започнете с първия си ресторант
                 </h3>
                 <div className="mt-2 text-sm text-blue-700">
                   <p>
-                    Изглежда, че нямате създадени ресторанти. Започнете с 
-                    <Link 
-                      href="/dashboard/restaurants" 
-                      className="font-medium underline hover:text-blue-600"
-                    >
-                      {' '}създаване на вашия първи ресторант
-                    </Link>.
+                    Създайте първия си ресторант и започнете да добавяте менюта. 
+                    Ще можете да генерирате QR код за лесен достъп от клиентите ви.
                   </p>
+                </div>
+                <div className="mt-4">
+                  <div className="-mx-2 -my-1.5 flex">
+                    <Link
+                      href="/dashboard/restaurants/new"
+                      className="bg-blue-50 px-2 py-1.5 rounded-md text-sm font-medium text-blue-800 hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                    >
+                      Създайте ресторант сега
+                    </Link>
+                  </div>
                 </div>
               </div>
             </div>

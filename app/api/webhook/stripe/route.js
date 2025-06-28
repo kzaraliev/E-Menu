@@ -79,7 +79,18 @@ export async function POST(req) {
                     throw new Error('Error updating user subscription');
                 }
 
-                console.log('User subscription updated for:', customer.email);
+                // Activate user's restaurants
+                const { error: activateError } = await supabase.rpc(
+                    'update_user_restaurant_status',
+                    { user_uuid: authUser.id, active: true }
+                );
+
+                if (activateError) {
+                    console.error('Error activating restaurants:', activateError);
+                    // Don't throw error here - subscription is still valid even if restaurants aren't activated
+                }
+
+                console.log('User subscription updated and restaurants activated for:', customer.email);
 
                 // Extra: >>>>> send email to dashboard <<<<
 
@@ -127,7 +138,18 @@ export async function POST(req) {
                     throw new Error('Error revoking user access');
                 }
 
-                console.log('User access revoked for:', customer.email);
+                // Deactivate user's restaurants
+                const { error: deactivateError } = await supabase.rpc(
+                    'update_user_restaurant_status',
+                    { user_uuid: authUser.id, active: false }
+                );
+
+                if (deactivateError) {
+                    console.error('Error deactivating restaurants:', deactivateError);
+                    // Don't throw error here - subscription revocation is still valid
+                }
+
+                console.log('User access revoked and restaurants deactivated for:', customer.email);
 
                 break;
             }
