@@ -10,7 +10,7 @@ export const plans = [
     link:
       process.env.NODE_ENV === "development"
         ? "https://buy.stripe.com/test_6oU7sLayceiN1fV42Z63K00"
-        : "",
+        : "https://buy.stripe.com/test_6oU7sLayceiN1fV42Z63K00",
     priceId:
       process.env.NODE_ENV === "development"
         ? "price_1ReuJ3HWilXYbGmnpAWwnjmL"
@@ -23,7 +23,7 @@ export const plans = [
     link:
       process.env.NODE_ENV === "development"
         ? "https://buy.stripe.com/test_bJe14n6hWb6B2jZ2YV63K01"
-        : "",
+        : "https://buy.stripe.com/test_bJe14n6hWb6B2jZ2YV63K01",
     priceId:
       process.env.NODE_ENV === "development"
         ? "price_1ReuNbHWilXYbGmnit7DBh5z"
