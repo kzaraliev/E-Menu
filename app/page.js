@@ -5,7 +5,6 @@ import PricingDisplay from '../components/PricingDisplay'
 import Testimonials from '../components/Testimonials'
 import FAQ from '../components/FAQ'
 import CTA from '../components/CTA'
-import Link from 'next/link'
 
 export const metadata = {
   title: 'e-menu.bg - Дигитални менюта за ресторанти | QR код менюта',
@@ -65,7 +64,6 @@ export default function Home() {
       />
       
       <Hero />
-      <Link href="/blog">Blog</Link>
       <Features />
       <HowItWorks />
       <PricingDisplay />
