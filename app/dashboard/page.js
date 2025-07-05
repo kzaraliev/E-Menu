@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabase'
 import Link from 'next/link'
 import Pricing from '@/components/Pricing'
+import ButtonCustomerPortal from '@/components/ButtonCustomerPortal'
 
 export default function DashboardPage() {
   const { user } = useAuth()
@@ -206,11 +207,7 @@ export default function DashboardPage() {
               >
                 📝 Редактирай меню
               </Link>
-              <button
-                className="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200"
-              >
-                📊 Статистики
-              </button>
+              <ButtonCustomerPortal />
             </div>
           </div>
         </div>
