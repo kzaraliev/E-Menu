@@ -80,7 +80,7 @@ const navigation = {
     return (
       <footer className="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white">
         {/* CTA Section */}
-        <div className="border-b border-gray-700">
+        {/* <div className="border-b border-gray-700">
           <div className="mx-auto max-w-7xl px-6 py-20 sm:py-32 lg:px-8">
             <div className="mx-auto max-w-2xl text-center">
               <hgroup>
@@ -109,7 +109,7 @@ const navigation = {
               </div>
             </div>
           </div>
-        </div>
+        </div> */}
         
         {/* Main Footer Content */}
         <div className="mx-auto max-w-7xl px-6 py-16 lg:px-8 lg:py-24">
