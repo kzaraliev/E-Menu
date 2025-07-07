@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link';
 import { useState } from 'react';
 
 export default function FAQ() {
@@ -112,18 +113,18 @@ export default function FAQ() {
             Нашият екип е готов да ви помогне с всякакви въпроси
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <a
+            <Link
               href="mailto:support@e-menu.bg"
               className="inline-flex items-center px-6 py-3 bg-indigo-600 text-white font-medium rounded-lg hover:bg-indigo-700 transition-colors"
             >
               📧 support@e-menu.bg
-            </a>
-            <a
+            </Link>
+            <Link
               href="tel:+359888123456"
               className="inline-flex items-center px-6 py-3 bg-white text-gray-700 font-medium rounded-lg border border-gray-300 hover:bg-gray-50 transition-colors"
             >
               📞 +359 888 123 456
-            </a>
+            </Link>
           </div>
         </div>
       </div>

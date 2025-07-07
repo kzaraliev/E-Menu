@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link';
 import { useAuth } from '../lib/auth-context';
 import { useRouter } from 'next/navigation';
 
@@ -57,12 +58,12 @@ export default function CTA() {
             >
               {user ? '🚀 Към таблото' : '🚀 Започнете безплатно'}
             </button>
-            <a
+            <Link
               href="#pricing"
               className="px-8 py-4 bg-transparent border-2 border-white text-white font-bold rounded-xl hover:bg-white hover:text-indigo-900 transition-all duration-200 text-lg"
             >
               💰 Вижте цените
-            </a>
+            </Link>
           </div>
 
           {/* Trust Badges */}

@@ -1,3 +1,5 @@
+import Link from 'next/link';
+
 export const metadata = {
   title: "За нас | e-menu.bg - Дигитални менюта за ресторанти",
   description: "Научете повече за e-menu.bg - българската платформа за дигитални менюта. Нашата мисия е да модернизираме ресторантската индустрия в България.",
@@ -337,18 +339,18 @@ export default function AboutPage() {
               Започнете да използвате модерни дигитални решения още днес.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <a
+              <Link
                 href="/contact"
                 className="bg-white text-blue-600 px-8 py-4 rounded-xl font-semibold text-lg hover:bg-blue-50 transition-colors duration-300 transform hover:scale-105 shadow-lg"
               >
                 Свържете се с нас
-              </a>
-              <a
+              </Link>
+              <Link
                 href="/login"
                 className="bg-blue-700 text-white px-8 py-4 rounded-xl font-semibold text-lg hover:bg-blue-800 transition-colors duration-300 transform hover:scale-105 shadow-lg border border-blue-500"
               >
                 Започнете безплатно
-              </a>
+              </Link>
             </div>
           </div>
         </section>

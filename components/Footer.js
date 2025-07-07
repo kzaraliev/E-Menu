@@ -127,14 +127,14 @@ const navigation = {
               </p>
               <div className="flex gap-4">
                 {navigation.social.map((item) => (
-                  <a 
+                  <Link
                     key={item.name} 
                     href={item.href} 
                     className="text-gray-400 hover:text-indigo-400 transition-colors duration-300 transform hover:scale-110"
                   >
                     <span className="sr-only">{item.name}</span>
                     <item.icon aria-hidden="true" className="size-7" />
-                  </a>
+                  </Link>
                 ))}
               </div>
             </div>

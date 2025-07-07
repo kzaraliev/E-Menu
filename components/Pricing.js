@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { useAuth } from "../lib/auth-context";
 import Image from "next/image";
+import Link from "next/link";
 
 // Stripe Plans >> fill in your own priceId & link
 export const plans = [
@@ -176,13 +177,13 @@ const Pricing = () => {
                 </ul>
 
                 <div className="pt-6 border-t border-gray-100">
-                  <a
+                  <Link
                     className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 px-6 rounded-xl transition-colors duration-200 inline-block text-center text-lg"
                     target="_blank"
                     href={plan.link + "?prefilled_email=" + user?.email}
                   >
                     Регистрирайте се
-                  </a>
+                  </Link>
                   <p className="text-center text-sm text-gray-500 mt-3">
                     Започнете за минути. Отменете по всяко време.
                   </p>
