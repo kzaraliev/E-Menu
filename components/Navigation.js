@@ -31,6 +31,7 @@ const Navigation = () => {
     const navigationItems = [
         { name: 'Начало', href: '/', current: false },
         { name: 'Ценообразуване', href: '/#pricing', current: false },
+        { name: 'Блог', href: '/blog', current: false },
         ...(user ? [
             { name: 'Табло', href: '/dashboard', current: false },
             { name: 'Ресторанти', href: '/dashboard/restaurants', current: false },

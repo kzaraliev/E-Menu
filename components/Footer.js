@@ -15,7 +15,7 @@ const navigation = {
     ],
     company: [
       { name: 'За нас', href: '#' },
-      { name: 'Блог', href: '#' },
+      { name: 'Блог', href: '/blog' },
       { name: 'Партньори', href: '#' },
       { name: 'Кариери', href: '#' },
     ],

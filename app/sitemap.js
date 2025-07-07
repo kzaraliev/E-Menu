@@ -1,4 +1,5 @@
 import { supabase } from '@/lib/supabase'
+import { generateBlogSitemap } from '@/lib/blog'
 
 export default async function sitemap() {
   const baseUrl = 'https://e-menu.bg'
@@ -16,6 +17,12 @@ export default async function sitemap() {
       lastModified: new Date(),
       changeFrequency: 'monthly',
       priority: 0.5,
+    },
+    {
+      url: `${baseUrl}/blog`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 0.8,
     },
   ]
 
@@ -39,9 +46,24 @@ export default async function sitemap() {
       priority: 0.8,
     }))
 
-    return [...staticPages, ...restaurantPages]
+    // Get blog pages
+    const blogPages = generateBlogSitemap().map(post => ({
+      url: post.url.replace(process.env.NEXT_PUBLIC_SITE_URL || 'https://yourdomain.com', baseUrl),
+      lastModified: post.lastModified,
+      changeFrequency: post.changeFrequency,
+      priority: post.priority,
+    }))
+
+    return [...staticPages, ...restaurantPages, ...blogPages]
   } catch (error) {
     console.error('Error generating sitemap:', error)
-    return staticPages
+    // Include blog pages even if restaurant fetch fails
+    const blogPages = generateBlogSitemap().map(post => ({
+      url: post.url.replace(process.env.NEXT_PUBLIC_SITE_URL || 'https://yourdomain.com', baseUrl),
+      lastModified: post.lastModified,
+      changeFrequency: post.changeFrequency,
+      priority: post.priority,
+    }))
+    return [...staticPages, ...blogPages]
   }
 } 
