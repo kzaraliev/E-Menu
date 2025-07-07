@@ -11,7 +11,7 @@ const navigation = {
       { name: 'Документация', href: '#' },
       { name: 'Помощ', href: '#' },
       { name: 'Поддръжка', href: '#' },
-      { name: 'Контакти', href: '#' },
+      { name: 'Контакти', href: '/contact' },
     ],
     company: [
       { name: 'За нас', href: '#' },

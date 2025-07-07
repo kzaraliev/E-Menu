@@ -14,6 +14,7 @@ export default function ConditionalNavigation() {
     !pathname.startsWith('/login') && 
     !pathname.startsWith('/api') && 
     !pathname.startsWith('/blog') && 
+    !pathname.startsWith('/contact') && 
     pathname.split('/').length === 2;
 
   // Don't render Navigation on restaurant pages

@@ -5,6 +5,7 @@ import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import NextTopLoader from 'nextjs-toploader';
 import ConditionalNavigation from "@/components/ConditionalNavigation";
+import Script from "next/script";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -40,6 +41,9 @@ export default function RootLayout({ children }) {
             <Footer />
           </div>
         </AuthProvider>
+        <Script
+          src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"
+        />
       </body>
     </html>
   );
