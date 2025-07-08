@@ -19,6 +19,7 @@
     "gray-matter": "^4.0.3",
     "next": "15.3.4",
     "next-mdx-remote": "^5.0.0",
+    "next-qrcode": "^2.5.1",
     "nextjs-toploader": "^3.8.16",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
