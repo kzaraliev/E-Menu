@@ -4,8 +4,9 @@ import Image from 'next/image';
 import { notFound } from 'next/navigation';
 
 export async function generateMetadata({ params }) {
+  const { slug } = await params;
   try {
-    const postData = await getPostData(params.slug);
+    const postData = await getPostData(slug);
     
     return {
       title: `${postData.title} | E-Menu Блог`,
@@ -35,7 +36,7 @@ export async function generateMetadata({ params }) {
         images: postData.image ? [postData.image] : [],
       },
       alternates: {
-        canonical: `/blog/${params.slug}`,
+        canonical: `/blog/${slug}`,
       },
       robots: {
         index: true,
@@ -79,8 +80,9 @@ function calculateReadingTime(content) {
 }
 
 export default async function BlogPost({ params }) {
+  const { slug } = await params;
   try {
-    const postData = await getPostData(params.slug);
+    const postData = await getPostData(slug);
     
     const jsonLd = {
       '@context': 'https://schema.org',
@@ -104,7 +106,7 @@ export default async function BlogPost({ params }) {
       },
       mainEntityOfPage: {
         '@type': 'WebPage',
-        '@id': `${process.env.NEXT_PUBLIC_SITE_URL || 'https://yourdomain.com'}/blog/${params.slug}`,
+        '@id': `${process.env.NEXT_PUBLIC_SITE_URL || 'https://yourdomain.com'}/blog/${slug}`,
       },
     };
 
