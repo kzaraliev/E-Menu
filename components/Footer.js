@@ -20,8 +20,8 @@ const navigation = {
       { name: 'Кариери', href: '#' },
     ],
     legal: [
-      { name: 'Условия за ползване', href: '#' },
-      { name: 'Политика за поверителност', href: '#' },
+      { name: 'Условия за ползване', href: '/terms-of-use' },
+      { name: 'Политика за поверителност', href: '/privacy-policy' },
       { name: 'Бисквитки', href: '#' },
     ],
     social: [
