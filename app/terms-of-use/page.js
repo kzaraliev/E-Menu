@@ -83,9 +83,9 @@ export default function TermsOfUsePage() {
 
             <h2 className="text-2xl font-bold text-slate-900 mt-8 mb-4">1. Общи положения</h2>
             <p className="text-slate-700 mb-4">
-              Тези Условия за ползване ("Условията") регулират достъпа до и използването на 
-              уебсайта e-menu.bg и свързаните с него услуги ("Платформата"), 
-              предоставяни от e-menu.bg ("ние", "нас", "наша").
+              Тези Условия за ползване (&quot;Условията&quot;) регулират достъпа до и използването на 
+              уебсайта e-menu.bg и свързаните с него услуги (&quot;Платформата&quot;), 
+              предоставяни от e-menu.bg (&quot;ние&quot;, &quot;нас&quot;, &quot;наша&quot;).
             </p>
             <p className="text-slate-700 mb-6">
               Като достъпвате или използвате нашата Платформа, вие се съгласявате да спазвате 
@@ -238,7 +238,7 @@ export default function TermsOfUsePage() {
 
             <h2 className="text-2xl font-bold text-slate-900 mt-8 mb-4">8. Отказ от отговорност</h2>
             <p className="text-slate-700 mb-4">
-              Услугите се предоставят "както са". Не гарантираме, че:
+              Услугите се предоставят &quot;както са&quot;. Не гарантираме, че:
             </p>
             <ul className="list-disc list-inside text-slate-700 space-y-2 mb-6">
               <li>Услугите ще бъдат непрекъснати или безпроблемни</li>
