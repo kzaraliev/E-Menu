@@ -241,7 +241,7 @@ export default function PrivacyPolicyPage() {
               </p>
               <div className="space-y-2">
                 <p className="text-slate-700">
-                  <strong>Email:</strong> <a href="mailto:privacy@e-menu.bg" className="text-blue-600 hover:text-blue-800">privacy@e-menu.bg</a>
+                  <strong>Email:</strong> <Link href="mailto:privacy@e-menu.bg" className="text-blue-600 hover:text-blue-800">privacy@e-menu.bg</Link>
                 </p>
                 <p className="text-slate-700">
                   <strong>Адрес:</strong> България
