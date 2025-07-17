@@ -22,7 +22,7 @@ const navigation = {
     legal: [
       { name: 'Условия за ползване', href: '/terms-of-use' },
       { name: 'Политика за поверителност', href: '/privacy-policy' },
-      { name: 'Бисквитки', href: '#' },
+      { name: 'Политика за бисквитки', href: '/cookies-policy' },
     ],
     social: [
       {

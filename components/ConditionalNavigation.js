@@ -16,6 +16,9 @@ export default function ConditionalNavigation() {
     !pathname.startsWith('/blog') && 
     !pathname.startsWith('/contact') && 
     !pathname.startsWith('/about') && 
+    !pathname.startsWith('/privacy-policy') && 
+    !pathname.startsWith('/terms-of-use') && 
+    !pathname.startsWith('/cookies-policy') && 
     pathname.split('/').length === 2;
 
   // Don't render Navigation on restaurant pages
