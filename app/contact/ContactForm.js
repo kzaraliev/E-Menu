@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import Link from 'next/link'
 
 export default function ContactForm() {
   const [formData, setFormData] = useState({
@@ -327,9 +328,9 @@ export default function ContactForm() {
           <div className="ml-3">
             <p className="text-sm text-slate-600">
               Вашите данни се обработват съгласно нашата{' '}
-              <a href="/privacy-policy" className="text-blue-600 hover:text-blue-700 underline">
+              <Link href="/privacy-policy" className="text-blue-600 hover:text-blue-700 underline">
                 политика за поверителност
-              </a>
+              </Link>
               . Използваме ги единствено за отговор на вашето запитване.
             </p>
           </div>

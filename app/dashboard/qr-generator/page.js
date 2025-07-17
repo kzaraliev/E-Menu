@@ -34,7 +34,7 @@ export default function QRGeneratorPage() {
     if (user) {
       fetchRestaurants()
     }
-  }, [user])
+  }, [user, fetchRestaurants])
 
   if (loading || subscriptionLoading) {
     return (

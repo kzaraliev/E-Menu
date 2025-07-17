@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import Image from 'next/image';
 import { useQRCode } from "next-qrcode";
 
 export default function QRCodeGenerator({ restaurants = [] }) {
@@ -72,6 +73,7 @@ export default function QRCodeGenerator({ restaurants = [] }) {
     wifiConfig.password,
     wifiConfig.security,
     restaurants,
+    generateQRData,
   ]);
 
   // Качване на лого файл
@@ -295,9 +297,11 @@ export default function QRCodeGenerator({ restaurants = [] }) {
                 <div className="space-y-3">
                   <div className="flex items-center justify-between bg-gray-50 p-3 rounded-lg">
                     <div className="flex items-center space-x-3">
-                      <img
+                      <Image
                         src={logoSrc}
                         alt="Logo"
+                        width={32}
+                        height={32}
                         className="w-8 h-8 object-contain"
                       />
                       <span className="text-sm text-gray-700">

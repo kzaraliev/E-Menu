@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect } from 'react'
+import Image from 'next/image'
 
 export default function MenuItemModal({ 
   item, 
@@ -55,9 +56,11 @@ export default function MenuItemModal({
         {/* Image */}
         {item.image_url && (
           <div className="relative">
-            <img 
+            <Image 
               src={item.image_url} 
               alt={`Снимка на ${getItemName(item)}`}
+              width={600}
+              height={256}
               className="w-full h-64 object-cover"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />

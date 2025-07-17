@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
 export default function PricingDisplay() {
@@ -214,13 +215,13 @@ export default function PricingDisplay() {
         <div className="mt-12 text-center">
           <p className="text-gray-600 mb-4">
             Имате въпроси? Разгледайте нашите 
-            <a href="#faq" className="text-indigo-600 hover:text-indigo-800 font-semibold mx-1">
+            <Link href="#faq" className="text-indigo-600 hover:text-indigo-800 font-semibold mx-1">
               често задавани въпроси
-            </a>
+            </Link>
             или се 
-            <a href="mailto:support@e-menu.bg" className="text-indigo-600 hover:text-indigo-800 font-semibold mx-1">
+            <Link href="mailto:support@e-menu.bg" className="text-indigo-600 hover:text-indigo-800 font-semibold mx-1">
               свържете с нас
-            </a>
+            </Link>
           </p>
         </div>
       </div>

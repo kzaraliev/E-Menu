@@ -85,7 +85,7 @@ export default function PrivacyPolicyPage() {
             <p className="text-slate-700 mb-6">
               Контролиращо лице на личните данни е e-menu.bg, регистрирано в България. 
               За въпроси относно обработката на лични данни можете да се свържете с нас на email: 
-              <a href="mailto:privacy@e-menu.bg" className="text-blue-600 hover:text-blue-800">privacy@e-menu.bg</a>
+              <Link href="mailto:privacy@e-menu.bg" className="text-blue-600 hover:text-blue-800">privacy@e-menu.bg</Link>
             </p>
 
             <h2 className="text-2xl font-bold text-slate-900 mt-8 mb-4">2. Какви данни събираме</h2>

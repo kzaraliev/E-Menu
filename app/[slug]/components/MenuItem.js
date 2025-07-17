@@ -1,8 +1,10 @@
+import Image from 'next/image'
+
 export default function MenuItem({ 
   item, 
   getItemName, 
   getItemDescription, 
-  themeClasses,
+  themeClasses, 
   onClick 
 }) {
   return (
@@ -13,9 +15,11 @@ export default function MenuItem({
       {/* Image */}
       {item.image_url && (
         <div className="mb-3">
-          <img 
+          <Image 
             src={item.image_url} 
             alt={`Снимка на ${getItemName(item)}`}
+            width={400}
+            height={128}
             className="w-full h-32 object-cover rounded-md"
             loading="lazy"
           />
