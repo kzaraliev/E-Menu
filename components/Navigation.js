@@ -35,8 +35,7 @@ const Navigation = () => {
         { name: 'Блог', href: '/blog', current: false },
         { name: 'Контакти', href: '/contact', current: false },
         ...(user ? [
-            { name: 'Табло', href: '/dashboard', current: false },
-            { name: 'Ресторанти', href: '/dashboard/restaurants', current: false },
+            { name: 'Табло', href: '/dashboard', current: false }
         ] : [])
     ];
 
