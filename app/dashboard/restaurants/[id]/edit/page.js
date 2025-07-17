@@ -79,10 +79,17 @@ export default function EditRestaurantPage() {
 
   const handleNameChange = (e) => {
     const name = e.target.value
-    setFormData(prev => ({
-      ...prev,
-      name
-    }))
+    setFormData(prev => {
+      const newData = { ...prev, name }
+      
+      // Auto-generate slug only if current slug is empty or auto-generated
+      // This prevents overwriting user's custom slug
+      if (!prev.slug.trim() || prev.slug === generateSlug(prev.name)) {
+        newData.slug = generateSlug(name)
+      }
+      
+      return newData
+    })
   }
 
   const handleSlugChange = (e) => {
@@ -94,14 +101,7 @@ export default function EditRestaurantPage() {
     setSlugError('')
   }
 
-  const generateSlugFromName = () => {
-    const newSlug = generateSlug(formData.name)
-    setFormData(prev => ({
-      ...prev,
-      slug: newSlug
-    }))
-    setSlugError('')
-  }
+
 
   const checkSlugAvailability = async (slug) => {
     if (!slug) return false
@@ -230,16 +230,16 @@ export default function EditRestaurantPage() {
         </div>
         <div className="mt-5 md:mt-0 md:col-span-2">
           <form onSubmit={handleSubmit}>
-            <div className="shadow sm:rounded-md sm:overflow-hidden">
-              <div className="px-4 py-5 bg-white space-y-6 sm:p-6">
+            <div className="shadow-lg sm:rounded-xl sm:overflow-hidden bg-white">
+              <div className="px-6 py-8 space-y-8">
                 {error && (
-                  <div className="bg-red-50 border border-red-200 rounded-md p-4">
-                    <div className="text-red-700">{error}</div>
+                  <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+                    <div className="text-red-700 font-medium">{error}</div>
                   </div>
                 )}
 
                 <div>
-                  <label htmlFor="name" className="block text-sm font-medium text-gray-700">
+                  <label htmlFor="name" className="block text-sm font-semibold text-gray-900 mb-3">
                     Име на ресторанта *
                   </label>
                   <input
@@ -249,17 +249,17 @@ export default function EditRestaurantPage() {
                     required
                     value={formData.name}
                     onChange={handleNameChange}
-                    className="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                    className="w-full px-4 py-3 border border-gray-300 placeholder-gray-600 text-gray-900 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
                     placeholder="напр. Ресторант Калина"
                   />
                 </div>
 
                 <div>
-                  <label htmlFor="slug" className="block text-sm font-medium text-gray-700">
+                  <label htmlFor="slug" className="block text-sm font-semibold text-gray-900 mb-3">
                     URL адрес *
                   </label>
-                  <div className="mt-1 flex rounded-md shadow-sm">
-                    <span className="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 text-sm">
+                  <div className="flex rounded-lg shadow-sm">
+                    <span className="inline-flex items-center px-6 py-3 rounded-l-lg border border-r-0 border-gray-300 bg-gray-50 text-gray-600 text-sm font-medium whitespace-nowrap min-w-fit">
                       e-menu.bg/
                     </span>
                     <input
@@ -269,19 +269,12 @@ export default function EditRestaurantPage() {
                       required
                       value={formData.slug}
                       onChange={handleSlugChange}
-                      className="focus:ring-blue-500 focus:border-blue-500 flex-1 block w-full rounded-none sm:text-sm border-gray-300"
+                      className="w-full px-4 py-3 border border-gray-300 placeholder-gray-600 text-gray-900 rounded-r-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
                       placeholder="restourant-kalina"
                     />
-                    <button
-                      type="button"
-                      onClick={generateSlugFromName}
-                      className="inline-flex items-center px-3 rounded-r-md border border-l-0 border-gray-300 bg-gray-50 text-gray-500 text-sm hover:bg-gray-100"
-                    >
-                      Генерирай
-                    </button>
                   </div>
                   {slugError && (
-                    <p className="mt-2 text-sm text-red-600">{slugError}</p>
+                    <p className="mt-2 text-sm text-red-600 font-medium">{slugError}</p>
                   )}
                   <p className="mt-2 text-sm text-gray-500">
                     Използвайте само малки букви, цифри и тирета.
@@ -289,23 +282,23 @@ export default function EditRestaurantPage() {
                 </div>
 
                 <div>
-                  <label htmlFor="description" className="block text-sm font-medium text-gray-700">
+                  <label htmlFor="description" className="block text-sm font-semibold text-gray-900 mb-3">
                     Описание (опционално)
                   </label>
                   <textarea
                     id="description"
                     name="description"
-                    rows={3}
+                    rows={4}
                     value={formData.description}
                     onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
-                    className="mt-1 shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border border-gray-300 rounded-md"
+                    className="w-full px-4 py-3 border border-gray-300 placeholder-gray-600 text-gray-900 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 resize-none"
                     placeholder="Кратко описание на ресторанта..."
                   />
                 </div>
 
                 <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
                   <div>
-                    <label htmlFor="address" className="block text-sm font-medium text-gray-700">
+                    <label htmlFor="address" className="block text-sm font-semibold text-gray-900 mb-3">
                       Адрес (опционално)
                     </label>
                     <input
@@ -314,13 +307,13 @@ export default function EditRestaurantPage() {
                       id="address"
                       value={formData.address}
                       onChange={(e) => setFormData(prev => ({ ...prev, address: e.target.value }))}
-                      className="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                      className="w-full px-4 py-3 border border-gray-300 placeholder-gray-600 text-gray-900 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
                       placeholder="ул. Витоша 1, София"
                     />
                   </div>
 
                   <div>
-                    <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
+                    <label htmlFor="phone" className="block text-sm font-semibold text-gray-900 mb-3">
                       Телефон (опционално)
                     </label>
                     <input
@@ -329,14 +322,14 @@ export default function EditRestaurantPage() {
                       id="phone"
                       value={formData.phone}
                       onChange={(e) => setFormData(prev => ({ ...prev, phone: e.target.value }))}
-                      className="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                      className="w-full px-4 py-3 border border-gray-300 placeholder-gray-600 text-gray-900 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
                       placeholder="0888 123 456"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label htmlFor="website" className="block text-sm font-medium text-gray-700">
+                  <label htmlFor="website" className="block text-sm font-semibold text-gray-900 mb-3">
                     Уебсайт (опционално)
                   </label>
                   <input
@@ -345,22 +338,22 @@ export default function EditRestaurantPage() {
                     id="website"
                     value={formData.website}
                     onChange={(e) => setFormData(prev => ({ ...prev, website: e.target.value }))}
-                    className="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                    className="w-full px-4 py-3 border border-gray-300 placeholder-gray-600 text-gray-900 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
                     placeholder="https://www.example.com"
                   />
                 </div>
               </div>
-              <div className="px-4 py-3 bg-gray-50 text-right sm:px-6 space-x-3">
+              <div className="px-6 py-4 bg-gray-50 flex justify-end space-x-3">
                 <Link
                   href="/dashboard/restaurants"
-                  className="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                  className="bg-white py-3 px-6 border border-gray-300 rounded-lg shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200"
                 >
                   Отказ
                 </Link>
                 <button
                   type="submit"
                   disabled={saving}
-                  className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50"
+                  className="inline-flex justify-center py-3 px-6 border border-transparent shadow-sm text-sm font-medium rounded-lg text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
                 >
                   {saving ? 'Запазване...' : 'Запази промените'}
                 </button>

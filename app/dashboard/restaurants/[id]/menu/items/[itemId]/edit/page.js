@@ -243,17 +243,17 @@ export default function EditMenuItemPage() {
 
         <div className="mt-5 md:mt-0 md:col-span-2">
           <form onSubmit={handleSubmit}>
-            <div className="shadow sm:rounded-md sm:overflow-hidden">
-              <div className="px-4 py-5 bg-white space-y-6 sm:p-6">
+            <div className="shadow-lg sm:rounded-xl sm:overflow-hidden bg-white">
+              <div className="px-6 py-8 space-y-8">
                 {error && (
-                  <div className="bg-red-50 border border-red-200 rounded-md p-4">
-                    <div className="text-red-700">{error}</div>
+                  <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+                    <div className="text-red-700 font-medium">{error}</div>
                   </div>
                 )}
 
                 {/* Basic Info */}
                 <div>
-                  <label htmlFor="name" className="block text-sm font-medium text-gray-700">
+                  <label htmlFor="name" className="block text-sm font-semibold text-gray-900 mb-3">
                     Име на артикула *
                   </label>
                   <input
@@ -263,13 +263,13 @@ export default function EditMenuItemPage() {
                     required
                     value={formData.name}
                     onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
-                    className="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                    className="w-full px-4 py-3 border border-gray-300 placeholder-gray-600 text-gray-900 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
                     placeholder="напр. Пица Маргарита"
                   />
                 </div>
 
                 <div>
-                  <label htmlFor="category_id" className="block text-sm font-medium text-gray-700">
+                  <label htmlFor="category_id" className="block text-sm font-semibold text-gray-900 mb-3">
                     Категория *
                   </label>
                   <select
@@ -278,9 +278,9 @@ export default function EditMenuItemPage() {
                     required
                     value={formData.category_id}
                     onChange={(e) => setFormData(prev => ({ ...prev, category_id: e.target.value }))}
-                    className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md"
+                    className="w-full px-4 py-3 border border-gray-300 text-gray-900 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 bg-white"
                   >
-                    <option value="">Изберете категория</option>
+                    <option value="" className="text-gray-600">Изберете категория</option>
                     {categories.map((category) => (
                       <option key={category.id} value={category.id}>
                         {category.name}
@@ -290,22 +290,22 @@ export default function EditMenuItemPage() {
                 </div>
 
                 <div>
-                  <label htmlFor="description" className="block text-sm font-medium text-gray-700">
+                  <label htmlFor="description" className="block text-sm font-semibold text-gray-900 mb-3">
                     Описание (опционално)
                   </label>
                   <textarea
                     id="description"
                     name="description"
-                    rows={3}
+                    rows={4}
                     value={formData.description}
                     onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
-                    className="mt-1 shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border border-gray-300 rounded-md"
+                    className="w-full px-4 py-3 border border-gray-300 placeholder-gray-600 text-gray-900 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 resize-none"
                     placeholder="Кратко описание на артикула, съставки..."
                   />
                 </div>
 
                 <div>
-                  <label htmlFor="image_url" className="block text-sm font-medium text-gray-700">
+                  <label htmlFor="image_url" className="block text-sm font-semibold text-gray-900 mb-3">
                     Снимка URL (опционално)
                   </label>
                   <input
@@ -314,29 +314,32 @@ export default function EditMenuItemPage() {
                     id="image_url"
                     value={formData.image_url}
                     onChange={(e) => setFormData(prev => ({ ...prev, image_url: e.target.value }))}
-                    className="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                    className="w-full px-4 py-3 border border-gray-300 placeholder-gray-600 text-gray-900 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
                     placeholder="https://example.com/image.jpg"
                   />
+                  <p className="mt-2 text-sm text-gray-500">
+                    За сега използвайте външни URL-и. Image upload ще добавим скоро.
+                  </p>
                 </div>
 
                 {/* Variants Section */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-3">
+                  <label className="block text-sm font-semibold text-gray-900 mb-4">
                     Варианти и цени *
                   </label>
-                  <div className="space-y-3">
+                  <div className="space-y-4">
                     {variants.map((variant, index) => (
-                      <div key={index} className="flex items-center space-x-3 p-3 border border-gray-200 rounded-md">
+                      <div key={index} className="flex items-center space-x-4 p-4 border border-gray-200 rounded-lg bg-gray-50">
                         <div className="flex-1">
                           <input
                             type="text"
                             placeholder="Размер/Вариант (напр. Малка, Голяма)"
                             value={variant.name}
                             onChange={(e) => updateVariant(index, 'name', e.target.value)}
-                            className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                            className="w-full px-3 py-2 border border-gray-300 placeholder-gray-600 text-gray-900 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 bg-white"
                           />
                         </div>
-                        <div className="w-24">
+                        <div className="w-28">
                           <input
                             type="number"
                             step="0.01"
@@ -344,7 +347,7 @@ export default function EditMenuItemPage() {
                             placeholder="Цена"
                             value={variant.price}
                             onChange={(e) => updateVariant(index, 'price', e.target.value)}
-                            className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                            className="w-full px-3 py-2 border border-gray-300 placeholder-gray-600 text-gray-900 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 bg-white"
                           />
                         </div>
                         <div className="flex items-center">
@@ -381,17 +384,17 @@ export default function EditMenuItemPage() {
                 </div>
               </div>
 
-              <div className="px-4 py-3 bg-gray-50 text-right sm:px-6 space-x-3">
+              <div className="px-6 py-4 bg-gray-50 flex justify-end space-x-3">
                 <Link
                   href={`/dashboard/restaurants/${params.id}/menu`}
-                  className="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                  className="bg-white py-3 px-6 border border-gray-300 rounded-lg shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200"
                 >
                   Отказ
                 </Link>
                 <button
                   type="submit"
                   disabled={saving}
-                  className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50"
+                  className="inline-flex justify-center py-3 px-6 border border-transparent shadow-sm text-sm font-medium rounded-lg text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
                 >
                   {saving ? 'Запазване...' : 'Запази промените'}
                 </button>

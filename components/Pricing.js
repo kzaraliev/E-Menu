@@ -78,7 +78,7 @@ const Pricing = () => {
                       onChange={() => setPlan(plans[0])}
                     />
                     <label
-                      className="cursor-pointer text-gray-700 font-medium"
+                      className="cursor-pointer text-gray-900 font-medium"
                       onClick={() => setPlan(plans[0])}
                     >
                       Месечно
@@ -94,13 +94,10 @@ const Pricing = () => {
                       onChange={() => setPlan(plans[1])}
                     />
                     <label
-                      className="cursor-pointer text-gray-700 font-medium"
+                      className="cursor-pointer text-gray-900 font-medium"
                       onClick={() => setPlan(plans[1])}
                     >
-                      Годишно{" "}
-                      <span className="bg-orange-100 text-orange-600 px-2 py-1 rounded text-sm font-bold">
-                        17% OFF 💰
-                      </span>
+                      Годишно <span className="text-green-600 text-sm">(50% икономия)</span>
                     </label>
                   </div>
                 </div>

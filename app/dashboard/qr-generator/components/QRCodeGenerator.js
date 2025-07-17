@@ -126,7 +126,7 @@ export default function QRCodeGenerator({ restaurants = [] }) {
         {/* Настройки за QR код */}
         <div className="space-y-6">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-semibold text-gray-900 mb-3">
               Тип QR код
             </label>
             <select
@@ -134,7 +134,7 @@ export default function QRCodeGenerator({ restaurants = [] }) {
               onChange={(e) => {
                 setQrType(e.target.value);
               }}
-              className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-3 border border-gray-300 text-gray-900 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 bg-white"
             >
               <option value="url">🌐 URL за ресторант</option>
               <option value="wifi">📶 WiFi настройки</option>
@@ -151,7 +151,7 @@ export default function QRCodeGenerator({ restaurants = [] }) {
           {/* Ресторант селекция */}
           {qrType === "url" && (
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-semibold text-gray-900 mb-3">
                 Изберете ресторант
               </label>
               <select
@@ -159,9 +159,9 @@ export default function QRCodeGenerator({ restaurants = [] }) {
                 onChange={(e) => {
                   setSelectedRestaurant(e.target.value);
                 }}
-                className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-4 py-3 border border-gray-300 text-gray-900 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 bg-white"
               >
-                <option value="">Избери ресторант...</option>
+                <option value="" className="text-gray-600">Избери ресторант...</option>
                 {restaurants.map((restaurant) => (
                   <option key={restaurant.id} value={restaurant.id}>
                     {restaurant.name}
@@ -173,9 +173,9 @@ export default function QRCodeGenerator({ restaurants = [] }) {
 
           {/* WiFi настройки */}
           {qrType === "wifi" && (
-            <div className="space-y-4">
+            <div className="space-y-6">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-semibold text-gray-900 mb-3">
                   WiFi мрежа (SSID)
                 </label>
                 <input
@@ -187,12 +187,12 @@ export default function QRCodeGenerator({ restaurants = [] }) {
                       ssid: e.target.value,
                     }));
                   }}
-                  className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-4 py-3 border border-gray-300 placeholder-gray-600 text-gray-900 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
                   placeholder="Име на WiFi мрежата"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-semibold text-gray-900 mb-3">
                   Парола
                 </label>
                 <input
@@ -204,13 +204,13 @@ export default function QRCodeGenerator({ restaurants = [] }) {
                       password: e.target.value,
                     }));
                   }}
-                  className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-4 py-3 border border-gray-300 placeholder-gray-600 text-gray-900 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
                   placeholder="WiFi парола"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Сигурност
+                <label className="block text-sm font-semibold text-gray-900 mb-3">
+                  Тип сигурност
                 </label>
                 <select
                   value={wifiConfig.security}
@@ -220,7 +220,7 @@ export default function QRCodeGenerator({ restaurants = [] }) {
                       security: e.target.value,
                     }));
                   }}
-                  className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-4 py-3 border border-gray-300 text-gray-900 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 bg-white"
                 >
                   <option value="WPA">WPA/WPA2</option>
                   <option value="WEP">WEP</option>
@@ -237,13 +237,13 @@ export default function QRCodeGenerator({ restaurants = [] }) {
             </h4>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-semibold text-gray-900 mb-3">
                 Размер
               </label>
               <select
                 value={qrSize}
                 onChange={(e) => setQrSize(parseInt(e.target.value))}
-                className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-4 py-3 border border-gray-300 text-gray-900 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 bg-white"
               >
                 <option value={300}>Малък (300px)</option>
                 <option value={400}>Среден (400px)</option>
@@ -255,14 +255,14 @@ export default function QRCodeGenerator({ restaurants = [] }) {
             </div>
 
             <div className="mt-4">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-semibold text-gray-900 mb-3">
                 Цвят на кода
               </label>
               <input
                 type="color"
                 value={qrFgColor}
                 onChange={(e) => setQrFgColor(e.target.value)}
-                className="w-full h-10 border border-gray-300 rounded-md"
+                className="w-full h-12 border border-gray-300 rounded-lg"
               />
               <p className="text-xs text-gray-500 mt-1">
                 Фонът винаги е бял за оптимална четимост

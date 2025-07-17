@@ -68,22 +68,22 @@ export default function LoginPage() {
         </div>
 
         {/* Login/Register Tabs */}
-        <div className="flex border-b border-gray-200">
+        <div className="flex border-b border-gray-200 bg-white rounded-t-lg">
           <button
-            className={`w-1/2 py-2 px-4 text-center font-medium ${
+            className={`w-1/2 py-3 px-4 text-center font-medium transition-colors duration-200 ${
               isLogin
-                ? 'text-blue-600 border-b-2 border-blue-600'
-                : 'text-gray-500 hover:text-gray-700'
+                ? 'text-blue-600 border-b-2 border-blue-600 bg-white'
+                : 'text-gray-500 hover:text-gray-700 bg-gray-50'
             }`}
             onClick={() => setIsLogin(true)}
           >
             Вход
           </button>
           <button
-            className={`w-1/2 py-2 px-4 text-center font-medium ${
+            className={`w-1/2 py-3 px-4 text-center font-medium transition-colors duration-200 ${
               !isLogin
-                ? 'text-blue-600 border-b-2 border-blue-600'
-                : 'text-gray-500 hover:text-gray-700'
+                ? 'text-blue-600 border-b-2 border-blue-600 bg-white'
+                : 'text-gray-500 hover:text-gray-700 bg-gray-50'
             }`}
             onClick={() => setIsLogin(false)}
           >
@@ -91,11 +91,11 @@ export default function LoginPage() {
           </button>
         </div>
 
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-          <div>
+        <div className="bg-white rounded-b-lg shadow-lg p-8">
+          <form className="space-y-6" onSubmit={handleSubmit}>
             {!isLogin && (
-              <div className="mb-4">
-                <label htmlFor="fullName" className="sr-only">
+              <div>
+                <label htmlFor="fullName" className="block text-sm font-medium text-gray-700 mb-2">
                   Пълно име
                 </label>
                 <input
@@ -103,16 +103,16 @@ export default function LoginPage() {
                   name="fullName"
                   type="text"
                   required={!isLogin}
-                  className="relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
-                  placeholder="Пълно име"
+                  className="w-full px-4 py-3 border border-gray-300 placeholder-gray-600 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
+                  placeholder="Въведете вашето пълно име"
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
                 />
               </div>
             )}
 
-            <div className="mb-4">
-              <label htmlFor="email" className="sr-only">
+            <div>
+              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
                 Имейл адрес
               </label>
               <input
@@ -121,15 +121,15 @@ export default function LoginPage() {
                 type="email"
                 autoComplete="email"
                 required
-                className="relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
-                placeholder="Имейл адрес"
+                className="w-full px-4 py-3 border border-gray-300 placeholder-gray-600 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
+                placeholder="your@email.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
             </div>
 
             <div>
-              <label htmlFor="password" className="sr-only">
+              <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
                 Парола
               </label>
               <input
@@ -138,47 +138,39 @@ export default function LoginPage() {
                 type="password"
                 autoComplete="current-password"
                 required
-                className="relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
-                placeholder="Парола"
+                className="w-full px-4 py-3 border border-gray-300 placeholder-gray-600 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
+                placeholder="Въведете вашата парола"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
             </div>
-          </div>
 
-          {error && (
-            <div className="text-red-600 text-sm text-center">{error}</div>
-          )}
+            {error && (
+              <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+                <div className="text-red-700 text-sm font-medium">{error}</div>
+              </div>
+            )}
 
-          {message && (
-            <div className="text-green-600 text-sm text-center">{message}</div>
-          )}
+            {message && (
+              <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                <div className="text-green-700 text-sm font-medium">{message}</div>
+              </div>
+            )}
 
-          <div>
-            <button
-              type="submit"
-              disabled={loading}
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {loading
-                ? 'Изчакайте...'
-                : isLogin
-                ? 'Влезте'
-                : 'Регистрирайте се'}
-            </button>
-          </div>
-        </form>
-
-        <div className="text-center">
-          <p className="text-sm text-gray-600">
-            {isLogin ? 'Нямате акаунт?' : 'Вече имате акаунт?'}{' '}
-            <button
-              className="font-medium text-blue-600 hover:text-blue-500"
-              onClick={() => setIsLogin(!isLogin)}
-            >
-              {isLogin ? 'Регистрирайте се' : 'Влезте'}
-            </button>
-          </p>
+            <div>
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
+              >
+                {loading
+                  ? 'Изчакайте...'
+                  : isLogin
+                  ? 'Влезте'
+                  : 'Регистрирайте се'}
+              </button>
+            </div>
+          </form>
         </div>
       </div>
     </div>

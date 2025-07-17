@@ -216,7 +216,7 @@ export default function ContactForm() {
             id="name"
             value={formData.name}
             onChange={handleInputChange}
-            className="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-300 bg-white"
+            className="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-300 bg-white placeholder-gray-600 text-gray-900"
             placeholder="Въведете вашето име"
             required
           />
@@ -233,7 +233,7 @@ export default function ContactForm() {
             id="email"
             value={formData.email}
             onChange={handleInputChange}
-            className="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-300 bg-white"
+            className="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-300 bg-white placeholder-gray-600 text-gray-900"
             placeholder="your@email.com"
             required
           />
@@ -252,7 +252,7 @@ export default function ContactForm() {
             id="restaurant"
             value={formData.restaurant}
             onChange={handleInputChange}
-            className="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-300 bg-white"
+            className="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-300 bg-white placeholder-gray-600 text-gray-900"
             placeholder="Ресторант ABC"
           />
         </div>
@@ -268,7 +268,7 @@ export default function ContactForm() {
             id="phone"
             value={formData.phone}
             onChange={handleInputChange}
-            className="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-300 bg-white"
+            className="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-300 bg-white placeholder-gray-600 text-gray-900"
             placeholder="+359 888 123 456"
           />
         </div>
@@ -284,9 +284,9 @@ export default function ContactForm() {
           id="subject"
           value={formData.subject}
           onChange={handleInputChange}
-          className="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-300 bg-white"
+          className="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-300 bg-white text-gray-900"
         >
-          <option value="">Изберете тема</option>
+          <option value="" className="text-gray-600">Изберете тема</option>
           <option value="general">Общи въпроси</option>
           <option value="technical">Техническа поддръжка</option>
           <option value="billing">Въпроси за таксуване</option>
@@ -307,7 +307,7 @@ export default function ContactForm() {
           rows={6}
           value={formData.message}
           onChange={handleInputChange}
-          className="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-300 bg-white resize-none"
+          className="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-300 bg-white resize-none placeholder-gray-600 text-gray-900"
           placeholder="Опишете вашето запитване подробно..."
           required
         />
@@ -318,49 +318,65 @@ export default function ContactForm() {
 
       {/* Privacy Notice */}
       <div className="bg-slate-50 rounded-xl p-4 border border-slate-200">
-        <div className="flex items-start space-x-3">
-          <div className="flex-shrink-0 mt-1">
-            <svg className="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div className="flex items-start">
+          <div className="flex-shrink-0">
+            <svg className="h-5 w-5 text-slate-400 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
             </svg>
           </div>
-          <div>
+          <div className="ml-3">
             <p className="text-sm text-slate-600">
-              <span className="font-semibold">Поверителност:</span> Вашите данни са защитени и ще бъдат използвани само за отговор на вашето запитване. 
-              Не споделяме информация с трети страни.
+              Вашите данни се обработват съгласно нашата{' '}
+              <a href="/privacy-policy" className="text-blue-600 hover:text-blue-700 underline">
+                политика за поверителност
+              </a>
+              . Използваме ги единствено за отговор на вашето запитване.
             </p>
           </div>
         </div>
       </div>
 
       {/* Submit Button */}
-      <div className="flex justify-end">
+      <div>
         <button
           type="submit"
           disabled={isSubmitting || !emailJSReady}
-          className={`
-            px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300 transform
-            ${isSubmitting || !emailJSReady
-              ? 'bg-slate-400 text-slate-600 cursor-not-allowed' 
-              : 'bg-blue-600 hover:bg-blue-700 text-white hover:scale-105 shadow-lg hover:shadow-xl'
-            }
-          `}
+          className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-4 px-6 rounded-xl transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {isSubmitting ? (
-            <div className="flex items-center space-x-2">
-              <svg className="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <span className="flex items-center justify-center">
+              <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                 <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                 <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
               </svg>
-              <span>Изпраща се...</span>
-            </div>
-          ) : !emailJSReady ? (
-            'Зарежда се...'
+              Изпращане...
+            </span>
           ) : (
-            'Изпратете съобщение'
+            'Изпратете съобщението'
           )}
         </button>
       </div>
+
+      {/* Success State */}
+      {isSubmitted && (
+        <div className="rounded-xl bg-green-50 p-6 border border-green-200">
+          <div className="flex">
+            <div className="flex-shrink-0">
+              <svg className="h-6 w-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+              </svg>
+            </div>
+            <div className="ml-3">
+              <h3 className="text-lg font-medium text-green-800">
+                Съобщението е изпратено успешно!
+              </h3>
+              <p className="mt-2 text-sm text-green-700">
+                Благодарим ви за запитването. Ще се свържем с вас възможно най-скоро на посочения имейл адрес.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
     </form>
-  );
+  )
 } 
