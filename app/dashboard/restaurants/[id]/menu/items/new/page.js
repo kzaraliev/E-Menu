@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabase'
 import { useRouter, useParams, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
+import { getNextMenuItemSortOrder } from '@/lib/sortingUtils'
 
 export default function NewMenuItemPage() {
   const { user } = useAuth()
@@ -117,6 +118,9 @@ export default function NewMenuItemPage() {
         validVariants[0].is_default = true
       }
 
+      // Get the next sort order for this category
+      const nextSortOrder = await getNextMenuItemSortOrder(formData.category_id)
+
       // Create menu item
       const { data: menuItemData, error: menuItemError } = await supabase
         .from('menu_items')
@@ -127,7 +131,7 @@ export default function NewMenuItemPage() {
             category_id: formData.category_id,
             restaurant_id: params.id,
             image_url: formData.image_url.trim() || null,
-            sort_order: 0 // Will be updated later with proper ordering
+            sort_order: nextSortOrder
           }
         ])
         .select()

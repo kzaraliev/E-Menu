@@ -7,6 +7,9 @@ import { supabase } from '@/lib/supabase'
 import { useParams } from 'next/navigation'
 import Link from 'next/link'
 import { AVAILABLE_LANGUAGES, getTranslation } from '@/lib/languages'
+import SortableCategories from '@/components/SortableCategories'
+import SortableMenuItems from '@/components/SortableMenuItems'
+import { updateCategorySortOrder, updateMenuItemSortOrder, getNextCategorySortOrder } from '@/lib/sortingUtils'
 
 export default function MenuManagementPage() {
   const { user } = useAuth()
@@ -58,6 +61,15 @@ export default function MenuManagementPage() {
         `)
         .eq('restaurant_id', params.id)
         .order('sort_order', { ascending: true })
+
+      // Sort menu items within each category by sort_order
+      if (categoriesData) {
+        categoriesData.forEach(category => {
+          if (category.menu_items) {
+            category.menu_items.sort((a, b) => a.sort_order - b.sort_order)
+          }
+        })
+      }
 
       if (categoriesError) throw categoriesError
       setCategories(categoriesData || [])
@@ -275,13 +287,15 @@ export default function MenuManagementPage() {
     if (!newCategoryName.trim()) return
 
     try {
+      const nextSortOrder = await getNextCategorySortOrder(params.id)
+      
       const { data, error } = await supabase
         .from('categories')
         .insert([
           {
             name: newCategoryName.trim(),
             restaurant_id: params.id,
-            sort_order: categories.length
+            sort_order: nextSortOrder
           }
         ])
         .select()
@@ -294,6 +308,43 @@ export default function MenuManagementPage() {
       setShowAddCategory(false)
     } catch (err) {
       setError('Грешка при добавянето: ' + err.message)
+    }
+  }
+
+  const handleReorderCategory = async (categoryId, newSortOrder) => {
+    try {
+      await updateCategorySortOrder(categoryId, newSortOrder)
+      
+      // Update local state
+      setCategories(prev => 
+        prev.map(cat => 
+          cat.id === categoryId 
+            ? { ...cat, sort_order: newSortOrder }
+            : cat
+        )
+      )
+    } catch (err) {
+      setError('Грешка при пренареждането на категориите: ' + err.message)
+    }
+  }
+
+  const handleReorderMenuItem = async (itemId, newSortOrder) => {
+    try {
+      await updateMenuItemSortOrder(itemId, newSortOrder)
+      
+      // Update local state
+      setCategories(prev => 
+        prev.map(cat => ({
+          ...cat,
+          menu_items: cat.menu_items?.map(item => 
+            item.id === itemId 
+              ? { ...item, sort_order: newSortOrder }
+              : item
+          ) || []
+        }))
+      )
+    } catch (err) {
+      setError('Грешка при пренареждането на артикулите: ' + err.message)
     }
   }
 
@@ -440,110 +491,29 @@ export default function MenuManagementPage() {
             </form>
           </div>
         ) : (
-          categories.map((category) => (
-            <div key={category.id} className="bg-white shadow rounded-lg overflow-hidden">
-              {/* Category Header */}
-              <div className="bg-gray-50 px-6 py-4 border-b border-gray-200">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h3 className="text-lg font-medium text-gray-900">
-                      {getCategoryName(category)}
-                    </h3>
-                    {selectedLanguage !== 'bg' && (
-                      <p className="text-sm text-gray-500">
-                        Оригинал: {category.name}
-                      </p>
-                    )}
-                  </div>
-                  <div className="flex items-center space-x-3">
-                    {selectedLanguage !== 'bg' && (
-                      <button
-                        onClick={() => openTranslationModal('category', category)}
-                        className="text-blue-600 hover:text-blue-800 text-sm"
-                      >
-                        🌐 {getCategoryName(category) === category.name ? 'Добави превод' : 'Редактирай превод'}
-                      </button>
-                    )}
-                    <span className="text-sm text-gray-500">
-                      {category.menu_items?.length || 0} артикула
-                    </span>
-                    <button
-                      onClick={() => handleDeleteCategory(category.id, category.name)}
-                      className="text-red-600 hover:text-red-800 text-sm"
-                    >
-                      🗑️ Изтрий
-                    </button>
-                  </div>
-                </div>
-              </div>
-
-              {/* Menu Items */}
+          <SortableCategories
+            categories={categories}
+            onReorderCategory={handleReorderCategory}
+            getCategoryName={getCategoryName}
+            selectedLanguage={selectedLanguage}
+            openTranslationModal={openTranslationModal}
+            handleDeleteCategory={handleDeleteCategory}
+          >
+            {(category) => (
               <div className="p-6">
-                {category.menu_items?.length === 0 ? (
-                  <div className="text-center py-8">
-                    <div className="text-gray-400 text-2xl mb-2">🍽️</div>
-                    <p className="text-gray-500 mb-4">Няма артикули в тази категория</p>
-                    <Link
-                      href={`/dashboard/restaurants/${params.id}/menu/items/new?category=${category.id}`}
-                      className="inline-flex items-center px-3 py-2 border border-transparent text-sm font-medium rounded-md text-blue-700 bg-blue-100 hover:bg-blue-200"
-                    >
-                      ➕ Добави първия артикул
-                    </Link>
-                  </div>
-                ) : (
-                  <div className="space-y-4">
-                    {category.menu_items.map((item) => (
-                      <div key={item.id} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
-                        <div className="flex-1">
-                          <h4 className="font-medium text-gray-900">{getItemName(item)}</h4>
-                          {selectedLanguage !== 'bg' && getItemName(item) !== item.name && (
-                            <p className="text-xs text-gray-500">Оригинал: {item.name}</p>
-                          )}
-                          {getItemDescription(item) && (
-                            <p className="text-sm text-gray-600 mt-1">{getItemDescription(item)}</p>
-                          )}
-                          {selectedLanguage !== 'bg' && getItemDescription(item) !== item.description && item.description && (
-                            <p className="text-xs text-gray-500">Оригинал описание: {item.description}</p>
-                          )}
-                          <div className="mt-2 flex items-center space-x-4">
-                            {item.menu_item_variants?.map((variant) => (
-                              <span key={variant.id} className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                                {variant.name}: {variant.price} лв.
-                              </span>
-                            ))}
-                          </div>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          {selectedLanguage !== 'bg' && (
-                            <button
-                              onClick={() => openTranslationModal('item', item)}
-                              className="text-blue-600 hover:text-blue-800 text-sm"
-                            >
-                              🌐 {getItemName(item) === item.name ? 'Добави превод' : 'Редактирай превод'}
-                            </button>
-                          )}
-                          <Link
-                            href={`/dashboard/restaurants/${params.id}/menu/items/${item.id}/edit`}
-                            className="text-blue-600 hover:text-blue-800 text-sm"
-                          >
-                            ✏️ Редактирай
-                          </Link>
-                        </div>
-                      </div>
-                    ))}
-                    <div className="pt-4 border-t border-gray-200">
-                      <Link
-                        href={`/dashboard/restaurants/${params.id}/menu/items/new?category=${category.id}`}
-                        className="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
-                      >
-                        ➕ Добави артикул
-                      </Link>
-                    </div>
-                  </div>
-                )}
+                <SortableMenuItems
+                  menuItems={category.menu_items}
+                  onReorderItem={handleReorderMenuItem}
+                  getItemName={getItemName}
+                  getItemDescription={getItemDescription}
+                  selectedLanguage={selectedLanguage}
+                  openTranslationModal={openTranslationModal}
+                  restaurantId={params.id}
+                  categoryId={category.id}
+                />
               </div>
-            </div>
-          ))
+            )}
+          </SortableCategories>
         )}
 
         {/* Add Category Section */}

@@ -108,6 +108,15 @@ async function getMenuData(slug) {
       return { error: 'Грешка при зареждането на менюто' }
     }
 
+    // Sort menu items within each category by sort_order
+    if (categories) {
+      categories.forEach(category => {
+        if (category.menu_items) {
+          category.menu_items.sort((a, b) => a.sort_order - b.sort_order)
+        }
+      })
+    }
+
     // Filter out categories without items
     const categoriesWithItems = categories?.filter(category => 
       category.menu_items && category.menu_items.length > 0
