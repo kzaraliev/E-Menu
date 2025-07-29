@@ -22,15 +22,21 @@ export default function DashboardPage() {
     totalViews: 0,
   });
   const [loading, setLoading] = useState(true);
+  const [restaurant, setRestaurant] = useState(null);
 
   const fetchStats = async () => {
     try {
       const { data: restaurants, error: restaurantsError } = await supabase
         .from("restaurants")
-        .select("id")
+        .select("*")
         .eq("owner_id", user.id);
 
       if (restaurantsError) throw restaurantsError;
+
+      // Store restaurant for display
+      if (restaurants?.length > 0) {
+        setRestaurant(restaurants[0]);
+      }
 
       const { data: categories, error: categoriesError } = await supabase
         .from("categories")
@@ -79,13 +85,13 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="px-4 py-6 sm:px-0">
-      <div className="border-4 border-dashed border-gray-200 rounded-lg p-8">
-        <div className="flex items-center justify-between mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">
-            Добре дошли в e-menu.bg Dashboard
+    <div className="px-4 py-4 sm:px-6 lg:px-8">
+      <div className="border-4 border-dashed border-gray-200 rounded-lg p-4 sm:p-6 lg:p-8">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 sm:mb-8">
+          <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mb-4 sm:mb-0">
+            {restaurant ? `Dashboard - ${restaurant.name}` : 'Добре дошли в e-menu.bg Dashboard'}
           </h1>
-          <div className="flex items-center space-x-2 bg-green-50 border-green-200 border rounded-lg px-3 py-1">
+          <div className="flex items-center space-x-2 bg-green-50 border-green-200 border rounded-lg px-3 py-1 self-start sm:self-auto">
             <div className="w-3 h-3 bg-green-500 rounded-full"></div>
             <span className="text-sm font-medium text-green-700">
               Активен план
@@ -93,28 +99,35 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <div className="bg-white overflow-hidden shadow rounded-lg">
-            <div className="p-5">
-              <div className="flex items-center">
-                <div className="flex-shrink-0">
-                  <div className="w-8 h-8 bg-blue-500 rounded-md flex items-center justify-center">
-                    <span className="text-white font-bold">🏪</span>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 mb-6 sm:mb-8">
+          {restaurant && (
+            <div className="bg-white overflow-hidden shadow rounded-lg">
+              <div className="p-5">
+                <div className="flex items-center">
+                  <div className="flex-shrink-0">
+                    <div className="w-8 h-8 bg-blue-500 rounded-md flex items-center justify-center">
+                      <span className="text-white font-bold">🏪</span>
+                    </div>
                   </div>
-                </div>
-                <div className="ml-5 w-0 flex-1">
-                  <dl>
-                    <dt className="text-sm font-medium text-gray-500 truncate">
-                      Ресторанти
-                    </dt>
-                    <dd className="text-lg font-medium text-gray-900">
-                      {stats.restaurants}
-                    </dd>
-                  </dl>
+                  <div className="ml-5 w-0 flex-1">
+                    <dl>
+                      <dt className="text-sm font-medium text-gray-500 truncate">
+                        Ресторант
+                      </dt>
+                      <dd className="text-lg font-medium text-gray-900 truncate">
+                        {restaurant.name}
+                      </dd>
+                      {restaurant.address && (
+                        <dd className="text-xs text-gray-500 truncate">
+                          {restaurant.address}
+                        </dd>
+                      )}
+                    </dl>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
+          )}
 
           <div className="bg-white overflow-hidden shadow rounded-lg">
             <div className="p-5">
@@ -160,27 +173,7 @@ export default function DashboardPage() {
             </div>
           </div>
 
-          <div className="bg-white overflow-hidden shadow rounded-lg">
-            <div className="p-5">
-              <div className="flex items-center">
-                <div className="flex-shrink-0">
-                  <div className="w-8 h-8 bg-purple-500 rounded-md flex items-center justify-center">
-                    <span className="text-white font-bold">👁️</span>
-                  </div>
-                </div>
-                <div className="ml-5 w-0 flex-1">
-                  <dl>
-                    <dt className="text-sm font-medium text-gray-500 truncate">
-                      Общо прегледи
-                    </dt>
-                    <dd className="text-lg font-medium text-gray-900">
-                      {stats.totalViews}
-                    </dd>
-                  </dl>
-                </div>
-              </div>
-            </div>
-          </div>
+
         </div>
 
         <div className="bg-white shadow rounded-lg">
@@ -188,37 +181,61 @@ export default function DashboardPage() {
             <h3 className="text-lg leading-6 font-medium text-gray-900 mb-4">
               Бързи действия
             </h3>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
               {canCreateRestaurant ? (
                 <Link
                   href="/dashboard/restaurants/new"
-                  className="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200"
+                  className="inline-flex items-center justify-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200"
                 >
                   ➕ Добави ресторант
                 </Link>
+              ) : restaurant && hasActiveSubscription ? (
+                <>
+                  <Link
+                    href={`/dashboard/restaurants/${restaurant.id}/menu`}
+                    className="inline-flex items-center justify-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200"
+                  >
+                    📝 Управление на меню
+                  </Link>
+                  <Link
+                    href={`/dashboard/restaurants/${restaurant.id}/edit`}
+                    className="inline-flex items-center justify-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200"
+                  >
+                    ⚙️ Настройки на ресторант
+                  </Link>
+                  <Link
+                    href="/dashboard/qr-generator"
+                    className="inline-flex items-center justify-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200"
+                  >
+                    🔗 Генерирай QR код
+                  </Link>
+                  <div className="sm:col-span-2 flex justify-center">
+                    <ButtonCustomerPortal />
+                  </div>
+                </>
+              ) : restaurant ? (
+                <div className="col-span-full text-center text-gray-500 py-4">
+                  <p className="mb-3">Изисква се активен план за достъп до функциите</p>
+                  <Link
+                    href="/pricing"
+                    className="inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-orange-600 hover:bg-orange-700"
+                  >
+                    Изберете план
+                  </Link>
+                </div>
               ) : (
-                <Link
-                  href="/dashboard/qr-generator"
-                  className="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200"
-                >
-                  🔗 Генерирай QR код
-                </Link>
+                <div className="col-span-full text-center text-gray-500 py-4">
+                  Създайте ресторант за достъп до функциите
+                </div>
               )}
-              <Link
-                href="/dashboard/restaurants"
-                className="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200"
-              >
-                📝 Редактирай меню
-              </Link>
-              <ButtonCustomerPortal />
             </div>
           </div>
         </div>
 
         {stats.restaurants === 0 && canCreateRestaurant && (
-          <div className="bg-blue-50 border border-blue-200 rounded-md p-4 mt-6">
-            <div className="flex">
-              <div className="flex-shrink-0">
+          <div className="bg-blue-50 border border-blue-200 rounded-md p-4 mt-4 sm:mt-6">
+            <div className="flex flex-col sm:flex-row">
+              <div className="flex-shrink-0 mb-3 sm:mb-0">
                 <svg
                   className="h-5 w-5 text-blue-400"
                   fill="currentColor"
@@ -231,7 +248,7 @@ export default function DashboardPage() {
                   />
                 </svg>
               </div>
-              <div className="ml-3">
+              <div className="sm:ml-3">
                 <h3 className="text-sm font-medium text-blue-800">
                   Започнете с първия си ресторант
                 </h3>

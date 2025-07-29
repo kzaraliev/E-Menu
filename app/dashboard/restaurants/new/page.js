@@ -185,8 +185,8 @@ export default function NewRestaurantPage() {
 
       if (error) throw error
 
-      // Redirect to restaurants list
-      router.push('/dashboard/restaurants')
+      // Redirect to dashboard
+      router.push('/dashboard')
     } catch (err) {
       setError(err.message)
     } finally {
@@ -195,22 +195,20 @@ export default function NewRestaurantPage() {
   }
 
   return (
-    <div className="px-4 py-6 sm:px-0">
-      <div className="md:grid md:grid-cols-3 md:gap-6">
-        <div className="md:col-span-1">
-          <div className="px-4 sm:px-0">
-            <h3 className="text-lg font-medium leading-6 text-gray-900">
-              Добави нов ресторант
-            </h3>
-            <p className="mt-1 text-sm text-gray-600">
-              Създайте цифрово меню за вашия ресторант. Всеки ресторант ще получи уникален URL адрес.
-            </p>
-          </div>
+    <div className="px-4 py-4 sm:py-6 lg:px-0">
+      <div className="max-w-3xl mx-auto">
+        <div className="mb-6">
+          <h3 className="text-xl sm:text-2xl font-medium leading-6 text-gray-900">
+            Добави нов ресторант
+          </h3>
+          <p className="mt-2 text-sm text-gray-600">
+            Създайте цифрово меню за вашия ресторант. Всеки ресторант ще получи уникален URL адрес.
+          </p>
         </div>
-        <div className="mt-5 md:mt-0 md:col-span-2">
+        <div>
           <form onSubmit={handleSubmit}>
             <div className="shadow-lg sm:rounded-xl sm:overflow-hidden bg-white">
-              <div className="px-6 py-8 space-y-8">
+              <div className="px-4 sm:px-6 py-6 sm:py-8 space-y-6 sm:space-y-8">
                 {error && (
                   <div className="bg-red-50 border border-red-200 rounded-lg p-4">
                     <div className="text-red-700 font-medium">{error}</div>
@@ -228,7 +226,7 @@ export default function NewRestaurantPage() {
                     required
                     value={formData.name}
                     onChange={handleNameChange}
-                    className="w-full px-4 py-3 border border-gray-300 placeholder-gray-600 text-gray-900 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
+                    className="w-full px-4 py-3 border border-gray-300 placeholder-gray-400 text-gray-900 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
                     placeholder="напр. Ресторант Калина"
                   />
                 </div>
@@ -238,7 +236,7 @@ export default function NewRestaurantPage() {
                     URL адрес *
                   </label>
                   <div className="flex rounded-lg shadow-sm">
-                    <span className="inline-flex items-center px-6 py-3 rounded-l-lg border border-r-0 border-gray-300 bg-gray-50 text-gray-600 text-sm font-medium whitespace-nowrap min-w-fit">
+                    <span className="inline-flex items-center px-3 sm:px-6 py-3 rounded-l-lg border border-r-0 border-gray-300 bg-gray-50 text-gray-600 text-xs sm:text-sm font-medium whitespace-nowrap">
                       e-menu.bg/
                     </span>
                     <input
@@ -248,7 +246,7 @@ export default function NewRestaurantPage() {
                       required
                       value={formData.slug}
                       onChange={handleSlugChange}
-                      className="w-full px-4 py-3 border border-gray-300 placeholder-gray-600 text-gray-900 rounded-r-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
+                      className="flex-1 min-w-0 px-4 py-3 border border-gray-300 placeholder-gray-400 text-gray-900 rounded-r-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
                       placeholder="restourant-kalina"
                     />
                   </div>
@@ -270,12 +268,12 @@ export default function NewRestaurantPage() {
                     rows={4}
                     value={formData.description}
                     onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
-                    className="w-full px-4 py-3 border border-gray-300 placeholder-gray-600 text-gray-900 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 resize-none"
+                    className="w-full px-4 py-3 border border-gray-300 placeholder-gray-400 text-gray-900 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 resize-none"
                     placeholder="Кратко описание на ресторанта..."
                   />
                 </div>
 
-                <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+                <div className="grid grid-cols-1 gap-4 sm:gap-6 sm:grid-cols-2">
                   <div>
                     <label htmlFor="address" className="block text-sm font-semibold text-gray-900 mb-3">
                       Адрес (опционално)
@@ -286,7 +284,7 @@ export default function NewRestaurantPage() {
                       id="address"
                       value={formData.address}
                       onChange={(e) => setFormData(prev => ({ ...prev, address: e.target.value }))}
-                      className="w-full px-4 py-3 border border-gray-300 placeholder-gray-600 text-gray-900 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
+                      className="w-full px-4 py-3 border border-gray-300 placeholder-gray-400 text-gray-900 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
                       placeholder="ул. Витоша 1, София"
                     />
                   </div>
@@ -301,7 +299,7 @@ export default function NewRestaurantPage() {
                       id="phone"
                       value={formData.phone}
                       onChange={(e) => setFormData(prev => ({ ...prev, phone: e.target.value }))}
-                      className="w-full px-4 py-3 border border-gray-300 placeholder-gray-600 text-gray-900 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
+                      className="w-full px-4 py-3 border border-gray-300 placeholder-gray-400 text-gray-900 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
                       placeholder="0888 123 456"
                     />
                   </div>
@@ -317,22 +315,22 @@ export default function NewRestaurantPage() {
                     id="website"
                     value={formData.website}
                     onChange={(e) => setFormData(prev => ({ ...prev, website: e.target.value }))}
-                    className="w-full px-4 py-3 border border-gray-300 placeholder-gray-600 text-gray-900 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
+                    className="w-full px-4 py-3 border border-gray-300 placeholder-gray-400 text-gray-900 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
                     placeholder="https://www.example.com"
                   />
                 </div>
               </div>
-              <div className="px-6 py-4 bg-gray-50 flex justify-end space-x-3">
+              <div className="px-4 sm:px-6 py-4 bg-gray-50 flex flex-col sm:flex-row sm:justify-end space-y-3 sm:space-y-0 sm:space-x-3">
                 <Link
-                  href="/dashboard/restaurants"
-                  className="bg-white py-3 px-6 border border-gray-300 rounded-lg shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200"
+                  href="/dashboard"
+                  className="w-full sm:w-auto inline-flex justify-center items-center bg-white py-3 px-6 border border-gray-300 rounded-lg shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200"
                 >
                   Отказ
                 </Link>
                 <button
                   type="submit"
                   disabled={loading}
-                  className="inline-flex justify-center py-3 px-6 border border-transparent shadow-sm text-sm font-medium rounded-lg text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
+                  className="w-full sm:w-auto inline-flex justify-center py-3 px-6 border border-transparent shadow-sm text-sm font-medium rounded-lg text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
                 >
                   {loading ? 'Създаване...' : 'Създай ресторант'}
                 </button>
